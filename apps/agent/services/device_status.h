@@ -17,7 +17,7 @@ typedef enum {
 } DeviceStatus;
 
 typedef struct {
-    char *wayru_device_id;
+    char *fry_device_id;
     DeviceInfo *device_info;
     AccessToken *access_token;
     task_id_t task_id; // Store current task ID for cleanup
@@ -26,7 +26,7 @@ typedef struct {
 extern DeviceStatus device_status;
 
 DeviceStatusTaskContext *
-device_status_service(DeviceInfo *device_info, char *wayru_device_id, AccessToken *access_token);
+device_status_service(DeviceInfo *device_info, char *fry_device_id, AccessToken *access_token);
 void clean_device_status_context(DeviceStatusTaskContext *context);
 
 #endif /* DEVICE_STATUS_H */

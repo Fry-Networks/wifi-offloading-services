@@ -20,11 +20,11 @@ int apply_config(const char *json_config, bool dev_mode);
 int apply_config_without_restarts(const char *json_config, bool dev_mode);
 
 /**
- * Check if configuration affects wayru-config itself
+ * Check if configuration affects fry-config itself
  * @param json_config The JSON configuration string to check
- * @return true if wayru-config needs restart, false otherwise
+ * @return true if fry-config needs restart, false otherwise
  */
-bool config_affects_wayru_config(const char *json_config, bool dev_mode);
+bool config_affects_fry_config(const char *json_config, bool dev_mode);
 
 /**
  * Check if configuration affects wireless settings
@@ -34,18 +34,18 @@ bool config_affects_wayru_config(const char *json_config, bool dev_mode);
 bool config_affects_wireless(const char *json_config, bool dev_mode);
 
 /**
- * Check if configuration affects wayru-agent
+ * Check if configuration affects fry-agent
  * @param json_config The JSON configuration string to check
- * @return true if wayru-agent config changed, false otherwise
+ * @return true if fry-agent config changed, false otherwise
  */
-bool config_affects_wayru_agent(const char *json_config, bool dev_mode);
+bool config_affects_fry_agent(const char *json_config, bool dev_mode);
 
 /**
- * Check if configuration affects wayru-collector
+ * Check if configuration affects fry-collector
  * @param json_config The JSON configuration string to check
- * @return true if wayru-collector config changed, false otherwise
+ * @return true if fry-collector config changed, false otherwise
  */
-bool config_affects_wayru_collector(const char *json_config, bool dev_mode);
+bool config_affects_fry_collector(const char *json_config, bool dev_mode);
 
 bool config_affects_opennds(const char *json_config, bool dev_mode);
 
@@ -67,9 +67,9 @@ void reset_config_section_hashes(void);
 void clear_all_section_hashes(bool dev_mode);
 
 void save_wireless_hash_after_success(const char *json_config, bool dev_mode);
-void save_wayru_agent_hash_after_success(const char *json_config, bool dev_mode);
-void save_wayru_collector_hash_after_success(const char *json_config, bool dev_mode);
-void save_wayru_config_hash_after_success(const char *json_config, bool dev_mode);
+void save_fry_agent_hash_after_success(const char *json_config, bool dev_mode);
+void save_fry_collector_hash_after_success(const char *json_config, bool dev_mode);
+void save_fry_config_hash_after_success(const char *json_config, bool dev_mode);
 void save_opennds_hash_after_success(const char *json_config, bool dev_mode);
 
 #endif /* RENDERER_H */

@@ -194,8 +194,8 @@ else
 
 	action=$(echo "$1" | awk -F"_" '{printf("%s", $NF)}')
 
-    # Adds this event to Wayru's fifo (this gets processed by wayru-os-services and published to the MQTT broker)
-    fifo_path="/tmp/wayru-os-services/nds-fifo"
+    # Adds this event to Fry's fifo (this gets processed by fry-os-services and published to the MQTT broker)
+    fifo_path="/tmp/fry-os-services/nds-fifo"
     echo "$loginfo" > "$fifo_path" 
 fi
 

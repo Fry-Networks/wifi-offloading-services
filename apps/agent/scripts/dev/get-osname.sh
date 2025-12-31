@@ -1,1 +1,1 @@
-echo "wayru-os"
+echo "fry-os"

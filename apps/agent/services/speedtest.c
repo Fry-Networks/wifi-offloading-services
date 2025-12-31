@@ -84,11 +84,11 @@ void speedtest_task(void *task_context) {
     char measurementid[256];
     const double upload_default = 0.0;
     const double download_default = 0.0;
-    generate_id(measurementid, sizeof(measurementid), context->registration->wayru_device_id, now);
+    generate_id(measurementid, sizeof(measurementid), context->registration->fry_device_id, now);
     console_debug(&csl, "Measurement ID for speedtest: %s", measurementid);
     json_object *speedtest_data = json_object_new_object();
     json_object_object_add(speedtest_data, "measurement_id", json_object_new_string(measurementid));
-    json_object_object_add(speedtest_data, "device_id", json_object_new_string(context->registration->wayru_device_id));
+    json_object_object_add(speedtest_data, "device_id", json_object_new_string(context->registration->fry_device_id));
     json_object_object_add(speedtest_data, "timestamp", json_object_new_int(now));
     json_object_object_add(speedtest_data, "upload_speed", json_object_new_double(upload_default));
     json_object_object_add(speedtest_data, "download_speed", json_object_new_double(download_default));

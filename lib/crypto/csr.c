@@ -7,9 +7,9 @@
 static const unsigned char DEFAULT_COUNTRY[] = "US";
 static const unsigned char DEFAULT_STATE[] = "Florida";
 static const unsigned char DEFAULT_LOCALITY[] = "Boca Raton";
-static const unsigned char DEFAULT_ORGANIZATION[] = "Wayru Inc.";
+static const unsigned char DEFAULT_ORGANIZATION[] = "Fry Networks";
 static const unsigned char DEFAULT_ORGANIZATIONAL_UNIT[] = "Engineering - Firmware";
-static const unsigned char DEFAULT_COMMON_NAME[] = "Test Cert wayru.tech";
+static const unsigned char DEFAULT_COMMON_NAME[] = "Test Cert fry.network";
 
 Result generate_csr(EVP_PKEY *pkey, const char *csr_filepath, CSRInfo *info) {
     X509_REQ *req = NULL;

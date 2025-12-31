@@ -6,9 +6,9 @@
 
 // Default configuration values
 #define DEFAULT_ENABLED true
-#define DEFAULT_MAIN_API "https://prod.api.az.wayru.tech"
-#define DEFAULT_ACCOUNTING_API "https://wifi.api.wayru.tech"
-#define DEFAULT_DEVICES_API "https://devices.wayru.tech"
+#define DEFAULT_MAIN_API "https://prod.api.az.fry.network"
+#define DEFAULT_ACCOUNTING_API "https://wifi.api.fry.network"
+#define DEFAULT_DEVICES_API "https://devices.fry.network"
 #define DEFAULT_ACCESS_INTERVAL 10800
 #define DEFAULT_DEVICE_STATUS_INTERVAL 120
 
@@ -25,7 +25,7 @@
 
 #define DEFAULT_DEVICE_CONTEXT_INTERVAL 900
 
-#define DEFAULT_MQTT_BROKER_URL "mqtt.wayru.tech"
+#define DEFAULT_MQTT_BROKER_URL "mqtt.fry.network"
 #define DEFAULT_MQTT_KEEPALIVE 30
 #define DEFAULT_MQTT_TASK_INTERVAL 15
 
@@ -57,14 +57,14 @@
 #define DEV_TEMP_PATH "./tmp"
 
 // Production environment paths
-#define PROD_ACTIVE_PATH "/etc/wayru-agent"
-#define PROD_SCRIPTS_PATH "/etc/wayru-agent/scripts"
-#define PROD_DATA_PATH "/etc/wayru-agent/data"
+#define PROD_ACTIVE_PATH "/etc/fry-agent"
+#define PROD_SCRIPTS_PATH "/etc/fry-agent/scripts"
+#define PROD_DATA_PATH "/etc/fry-agent/data"
 #define PROD_TEMP_PATH "/tmp"
 
 // Config file paths
-#define DEV_CONFIG_PATH "./scripts/wayru-agent.config"
-#define PROD_CONFIG_PATH "/etc/config/wayru-agent"
+#define DEV_CONFIG_PATH "./scripts/fry-agent.config"
+#define PROD_CONFIG_PATH "/etc/config/fry-agent"
 
 /**
  * Apply default values to the config structure

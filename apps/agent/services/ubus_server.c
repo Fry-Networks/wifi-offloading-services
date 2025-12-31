@@ -19,7 +19,7 @@ static Console csl = {
 
 // Global server state
 static struct ubus_context *ubus_ctx = NULL;
-static struct ubus_object wayru_object;
+static struct ubus_object fry_object;
 static UbusServerContext *server_context = NULL;
 static bool server_running = false;
 
@@ -55,7 +55,7 @@ static int method_ping(struct ubus_context *ctx,
                        struct blob_attr *msg);
 
 // UBUS method definitions - extensible for future methods
-static const struct ubus_method wayru_methods[] = {
+static const struct ubus_method fry_methods[] = {
     UBUS_METHOD_NOARG("get_access_token", method_get_access_token),
     UBUS_METHOD_NOARG("get_device_info", method_get_device_info),
     UBUS_METHOD_NOARG("get_status", method_get_status),
@@ -63,13 +63,13 @@ static const struct ubus_method wayru_methods[] = {
     UBUS_METHOD_NOARG("ping", method_ping),
 };
 
-static struct ubus_object_type wayru_object_type = UBUS_OBJECT_TYPE(WAYRU_AGENT_SERVICE_NAME, wayru_methods);
+static struct ubus_object_type fry_object_type = UBUS_OBJECT_TYPE(FRY_AGENT_SERVICE_NAME, fry_methods);
 
-static struct ubus_object wayru_object = {
-    .name = WAYRU_AGENT_SERVICE_NAME,
-    .type = &wayru_object_type,
-    .methods = wayru_methods,
-    .n_methods = ARRAY_SIZE(wayru_methods),
+static struct ubus_object fry_object = {
+    .name = FRY_AGENT_SERVICE_NAME,
+    .type = &fry_object_type,
+    .methods = fry_methods,
+    .n_methods = ARRAY_SIZE(fry_methods),
 };
 
 // Helper function to send JSON error response
@@ -159,7 +159,7 @@ static int method_get_status(struct ubus_context *ctx,
     struct blob_buf response = {0};
     blob_buf_init(&response, 0);
 
-    blobmsg_add_string(&response, "service", WAYRU_AGENT_SERVICE_NAME);
+    blobmsg_add_string(&response, "service", FRY_AGENT_SERVICE_NAME);
     blobmsg_add_u8(&response, "running", server_running ? 1 : 0);
 
     if (server_context) {
@@ -194,7 +194,7 @@ static int method_get_registration(struct ubus_context *ctx,
     struct blob_buf response = {0};
     blob_buf_init(&response, 0);
 
-    if (reg->wayru_device_id) blobmsg_add_string(&response, "wayru_device_id", reg->wayru_device_id);
+    if (reg->fry_device_id) blobmsg_add_string(&response, "fry_device_id", reg->fry_device_id);
     if (reg->access_key) blobmsg_add_string(&response, "access_key", reg->access_key);
 
     int ret = ubus_send_reply(ctx, req, response.head);
@@ -214,7 +214,7 @@ static int method_ping(struct ubus_context *ctx,
     blob_buf_init(&response, 0);
 
     blobmsg_add_string(&response, "response", "pong");
-    blobmsg_add_string(&response, "service", WAYRU_AGENT_SERVICE_NAME);
+    blobmsg_add_string(&response, "service", FRY_AGENT_SERVICE_NAME);
     blobmsg_add_u64(&response, "timestamp", time(NULL));
 
     int ret = ubus_send_reply(ctx, req, response.head);
@@ -251,7 +251,7 @@ void ubus_server_task(void *context) {
 
 // Initialize UBUS server
 int ubus_server_init(AccessToken *access_token, DeviceInfo *device_info, Registration *registration) {
-    console_info(&csl, "Initializing UBUS server as '%s'", WAYRU_AGENT_SERVICE_NAME);
+    console_info(&csl, "Initializing UBUS server as '%s'", FRY_AGENT_SERVICE_NAME);
 
     if (server_running) {
         console_warn(&csl, "UBUS server already running");
@@ -284,7 +284,7 @@ int ubus_server_init(AccessToken *access_token, DeviceInfo *device_info, Registr
     ubus_add_uloop(ubus_ctx);
 
     // Register our object
-    int ret = ubus_add_object(ubus_ctx, &wayru_object);
+    int ret = ubus_add_object(ubus_ctx, &fry_object);
     if (ret) {
         console_error(&csl, "Failed to add UBUS object: %s", ubus_strerror(ret));
         ubus_free(ubus_ctx);
@@ -362,7 +362,7 @@ void ubus_server_cleanup(void) {
     console_info(&csl, "Cleaning up UBUS server");
 
     if (ubus_ctx) {
-        ubus_remove_object(ubus_ctx, &wayru_object);
+        ubus_remove_object(ubus_ctx, &fry_object);
         ubus_free(ubus_ctx);
         ubus_ctx = NULL;
     }

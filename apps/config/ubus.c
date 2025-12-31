@@ -39,19 +39,19 @@ bool ubus_is_available_for_tokens(void) {
     }
     
     uint32_t id;
-    int ret = ubus_lookup_id(ctx, "wayru-agent", &id);
+    int ret = ubus_lookup_id(ctx, "fry-agent", &id);
     ubus_free(ctx);
-    
+
     if (ret != 0) {
-        console_debug(&csl, "wayru-agent object not found in UBUS (not ready yet)");
+        console_debug(&csl, "fry-agent object not found in UBUS (not ready yet)");
         return false;
     }
-    
-    console_debug(&csl, "UBUS connectivity to wayru-agent confirmed");
+
+    console_debug(&csl, "UBUS connectivity to fry-agent confirmed");
     return true;
 }
 
-// Get access token from wayru-agent via UBUS (synchronous)
+// Get access token from fry-agent via UBUS (synchronous)
 int ubus_get_access_token_sync(char *token_buf, size_t token_size, time_t *expiry) {
     struct ubus_context *ctx = NULL;
     uint32_t id;
@@ -72,33 +72,33 @@ int ubus_get_access_token_sync(char *token_buf, size_t token_size, time_t *expir
         return -1;
     }
 
-    // Look up wayru-agent object
-    ret = ubus_lookup_id(ctx, "wayru-agent", &id);
+    // Look up fry-agent object
+    ret = ubus_lookup_id(ctx, "fry-agent", &id);
     if (ret != 0) {
-        console_error(&csl, "Failed to find wayru-agent object: %s", ubus_strerror(ret));
+        console_error(&csl, "Failed to find fry-agent object: %s", ubus_strerror(ret));
         ubus_free(ctx);
         return -1;
     }
 
-    console_debug(&csl, "Found wayru-agent object with id: %u", id);
+    console_debug(&csl, "Found fry-agent object with id: %u", id);
 
     // Prepare request
     blob_buf_init(&b, 0);
 
-    // Request token from wayru-agent via ubus
-    console_debug(&csl, "Requesting access token from wayru-agent...");
+    // Request token from fry-agent via ubus
+    console_debug(&csl, "Requesting access token from fry-agent...");
     ret = ubus_invoke(ctx, id, "get_access_token", b.head, ubus_sync_response_cb, &response_data, 5000);
 
     blob_buf_free(&b);
 
     if (ret != 0) {
-        console_error(&csl, "Failed to get access token from wayru-agent: %s", ubus_strerror(ret));
+        console_error(&csl, "Failed to get access token from fry-agent: %s", ubus_strerror(ret));
         ubus_free(ctx);
         return -1;
     }
 
     if (!response_data.received || !response_data.buf.head) {
-        console_error(&csl, "No response received from wayru-agent");
+        console_error(&csl, "No response received from fry-agent");
         ubus_free(ctx);
         return -1;
     }
@@ -149,7 +149,7 @@ int ubus_get_access_token_sync(char *token_buf, size_t token_size, time_t *expir
     console_debug(&csl, "Token valid field: %s", valid ? "true" : "false");
     
     if (!valid) {
-        console_error(&csl, "Token marked as invalid by wayru-agent");
+        console_error(&csl, "Token marked as invalid by fry-agent");
         blob_buf_free(&response_data.buf);
         ubus_free(ctx);
         return -1;
@@ -158,7 +158,7 @@ int ubus_get_access_token_sync(char *token_buf, size_t token_size, time_t *expir
     // Extract token
     const char *token = blobmsg_get_string(tb[TOKEN_FIELD]);
     if (!token || strlen(token) == 0) {
-        console_error(&csl, "Empty token received from wayru-agent");
+        console_error(&csl, "Empty token received from fry-agent");
         blob_buf_free(&response_data.buf);
         ubus_free(ctx);
         return -1;
@@ -182,7 +182,7 @@ int ubus_get_access_token_sync(char *token_buf, size_t token_size, time_t *expir
     // Extract expiry time
     *expiry = (time_t)blobmsg_get_u64(tb[EXPIRES_AT_FIELD]);
 
-    console_info(&csl, "Successfully retrieved access token from wayru-agent, expires at %ld", *expiry);
+    console_info(&csl, "Successfully retrieved access token from fry-agent, expires at %ld", *expiry);
 
     // Cleanup
     blob_buf_free(&response_data.buf);
@@ -191,7 +191,7 @@ int ubus_get_access_token_sync(char *token_buf, size_t token_size, time_t *expir
     return 0;
 }
 
-// Get device information from wayru-agent via UBUS
+// Get device information from fry-agent via UBUS
 int ubus_get_device_info_sync(char *name_buf, size_t name_size, char *model_buf, size_t model_size) {
     struct ubus_context *ctx = ubus_connect(NULL);
     if (!ctx) {
@@ -200,9 +200,9 @@ int ubus_get_device_info_sync(char *name_buf, size_t name_size, char *model_buf,
     }
 
     uint32_t id;
-    int ret = ubus_lookup_id(ctx, "wayru-agent", &id);
+    int ret = ubus_lookup_id(ctx, "fry-agent", &id);
     if (ret != 0) {
-        console_error(&csl, "wayru-agent object not found for device info");
+        console_error(&csl, "fry-agent object not found for device info");
         ubus_free(ctx);
         return -1;
     }
@@ -213,7 +213,7 @@ int ubus_get_device_info_sync(char *name_buf, size_t name_size, char *model_buf,
                       ubus_sync_response_cb, &response_data, 5000);
     
     if (ret != 0 || !response_data.received) {
-        console_error(&csl, "Failed to get device info from wayru-agent: %d", ret);
+        console_error(&csl, "Failed to get device info from fry-agent: %d", ret);
         ubus_free(ctx);
         return -1;
     }
@@ -256,7 +256,7 @@ int ubus_get_device_info_sync(char *name_buf, size_t name_size, char *model_buf,
         console_debug(&csl, "Retrieved device model: %s", model_buf);
     }
 
-    console_info(&csl, "Successfully retrieved device info from wayru-agent");
+    console_info(&csl, "Successfully retrieved device info from fry-agent");
 
     // Cleanup
     blob_buf_free(&response_data.buf);

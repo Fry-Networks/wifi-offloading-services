@@ -13,7 +13,7 @@ static Console csl = {.topic = "rollback"};
 
 // Rollback paths
 #define DEV_ROLLBACK_DIR "./scripts/dev/rollback"
-#define PROD_ROLLBACK_DIR "/etc/wayru-config/rollback"
+#define PROD_ROLLBACK_DIR "/etc/fry-config/rollback"
 #define ROLLBACK_CONFIG_FILE "config.json"
 
 // Section-specific paths
@@ -46,12 +46,12 @@ static const char* get_section_config_filename(const char *section_type, const c
         return WIRELESS_CONFIG_FILE;
     } else if (strcmp(section_type, "opennds") == 0) {
         return OPENNDS_CONFIG_FILE;
-    } else if (strcmp(section_type, "wayru") == 0) {
-        if (meta_config_name && strcmp(meta_config_name, "wayru-agent") == 0) {
+    } else if (strcmp(section_type, "fry") == 0) {
+        if (meta_config_name && strcmp(meta_config_name, "fry-agent") == 0) {
             return AGENT_CONFIG_FILE;
-        } else if (meta_config_name && strcmp(meta_config_name, "wayru-collector") == 0) {
+        } else if (meta_config_name && strcmp(meta_config_name, "fry-collector") == 0) {
             return COLLECTOR_CONFIG_FILE;
-        } else if (meta_config_name && strcmp(meta_config_name, "wayru-config") == 0) {
+        } else if (meta_config_name && strcmp(meta_config_name, "fry-config") == 0) {
             return CONFIG_CONFIG_FILE;
         }
     }
@@ -149,14 +149,14 @@ char* extract_config_section(const char *full_config_json, const char *section_t
     
     json_object *section_obj = NULL;
     
-    if (strcmp(section_type, "wayru") == 0 && meta_config_name) {
-        // Extract wayru subsection
-        json_object *wayru_array;
-        if (json_object_object_get_ex(device_config, "wayru", &wayru_array)) {
-            int array_len = json_object_array_length(wayru_array);
+    if (strcmp(section_type, "fry") == 0 && meta_config_name) {
+        // Extract fry subsection
+        json_object *fry_array;
+        if (json_object_object_get_ex(device_config, "fry", &fry_array)) {
+            int array_len = json_object_array_length(fry_array);
             
             for (int i = 0; i < array_len; i++) {
-                json_object *section = json_object_array_get_idx(wayru_array, i);
+                json_object *section = json_object_array_get_idx(fry_array, i);
                 json_object *meta_config;
                 
                 if (json_object_object_get_ex(section, "meta_config", &meta_config)) {
@@ -316,39 +316,39 @@ static bool replace_json_section(json_object *root, const char *section_name, co
     return true;
 }
 
-static bool replace_json_wayru_section(json_object *root, const char *wayru_service, const char *section_json) {
+static bool replace_json_fry_section(json_object *root, const char *fry_service, const char *section_json) {
     json_object *device_config;
     if (!json_object_object_get_ex(root, "device_config", &device_config)) {
         console_error(&csl, "No device_config section found in root JSON");
         return false;
     }
     
-    json_object *wayru_array;
-    if (!json_object_object_get_ex(device_config, "wayru", &wayru_array)) {
-        // Create wayru array if it doesn't exist
-        wayru_array = json_object_new_array();
-        json_object_object_add(device_config, "wayru", wayru_array);
+    json_object *fry_array;
+    if (!json_object_object_get_ex(device_config, "fry", &fry_array)) {
+        // Create fry array if it doesn't exist
+        fry_array = json_object_new_array();
+        json_object_object_add(device_config, "fry", fry_array);
     }
     
     json_object *service_obj = json_tokener_parse(section_json);
     if (!service_obj) {
-        console_error(&csl, "Failed to parse wayru section JSON for %s", wayru_service);
+        console_error(&csl, "Failed to parse fry section JSON for %s", fry_service);
         return false;
     }
     
-    // Find and replace or add the wayru subsection
-    int array_len = json_object_array_length(wayru_array);
+    // Find and replace or add the fry subsection
+    int array_len = json_object_array_length(fry_array);
     bool found = false;
     
     for (int i = 0; i < array_len; i++) {
-        json_object *section = json_object_array_get_idx(wayru_array, i);
+        json_object *section = json_object_array_get_idx(fry_array, i);
         json_object *meta_config;
         
         if (json_object_object_get_ex(section, "meta_config", &meta_config)) {
             const char *config_name = json_object_get_string(meta_config);
-            if (config_name && strcmp(config_name, wayru_service) == 0) {
+            if (config_name && strcmp(config_name, fry_service) == 0) {
                 // Replace existing element
-                json_object_array_put_idx(wayru_array, i, service_obj);
+                json_object_array_put_idx(fry_array, i, service_obj);
                 found = true;
                 break;
             }
@@ -357,10 +357,10 @@ static bool replace_json_wayru_section(json_object *root, const char *wayru_serv
     
     if (!found) {
         // Add new element
-        json_object_array_add(wayru_array, service_obj);
+        json_object_array_add(fry_array, service_obj);
     }
     
-    console_debug(&csl, "Replaced wayru section: %s", wayru_service);
+    console_debug(&csl, "Replaced fry section: %s", fry_service);
     return true;
 }
 
@@ -400,34 +400,34 @@ static int restart_specific_services(const ServiceRestartNeeds *services, bool d
         sleep(1);
     }
     
-    if (services->wayru_collector) {
-        console_info(&csl, "Restarting wayru-collector after rollback...");
-        snprintf(command, sizeof(command), "/etc/init.d/wayru-collector restart 2>&1");
+    if (services->fry_collector) {
+        console_info(&csl, "Restarting fry-collector after rollback...");
+        snprintf(command, sizeof(command), "/etc/init.d/fry-collector restart 2>&1");
         int ret = system(command);
         if (WEXITSTATUS(ret) != 0) {
-            console_error(&csl, "Failed to restart wayru-collector");
+            console_error(&csl, "Failed to restart fry-collector");
             total_errors++;
         }
         sleep(1);
     }
     
-    if (services->wayru_agent) {
-        console_info(&csl, "Restarting wayru-agent after rollback...");
-        snprintf(command, sizeof(command), "/etc/init.d/wayru-agent restart 2>&1");
+    if (services->fry_agent) {
+        console_info(&csl, "Restarting fry-agent after rollback...");
+        snprintf(command, sizeof(command), "/etc/init.d/fry-agent restart 2>&1");
         int ret = system(command);
         if (WEXITSTATUS(ret) != 0) {
-            console_error(&csl, "Failed to restart wayru-agent");
+            console_error(&csl, "Failed to restart fry-agent");
             total_errors++;
         }
         sleep(1);
     }
     
-    if (services->wayru_config) {
-        console_info(&csl, "Restarting wayru-config after rollback...");
-        snprintf(command, sizeof(command), "/etc/init.d/wayru-config reload 2>&1");
+    if (services->fry_config) {
+        console_info(&csl, "Restarting fry-config after rollback...");
+        snprintf(command, sizeof(command), "/etc/init.d/fry-config reload 2>&1");
         int ret = system(command);
         if (WEXITSTATUS(ret) != 0) {
-            console_error(&csl, "Failed to restart wayru-config");
+            console_error(&csl, "Failed to restart fry-config");
             total_errors++;
         }
     }
@@ -442,7 +442,7 @@ static void restore_previous_hashes(bool dev_mode) {
     // Load the previous global hash
     const char *global_hash_file = dev_mode ? 
         "./scripts/hashes/global_config.hash" : 
-        "/etc/wayru-config/hashes/global_config.hash";
+        "/etc/fry-config/hashes/global_config.hash";
     
     FILE *fp = fopen(global_hash_file, "r");
     if (fp) {
@@ -469,7 +469,7 @@ static void restore_previous_hashes(bool dev_mode) {
 static void restore_failed_section_hashes(const ServiceRestartNeeds *failed_services, bool dev_mode) {
     console_info(&csl, "Restoring hashes for rolled-back services...");
     
-    const char *hash_dir = dev_mode ? "./scripts/hashes" : "/etc/wayru-config/hashes";
+    const char *hash_dir = dev_mode ? "./scripts/hashes" : "/etc/fry-config/hashes";
     
     if (failed_services->wireless) {
         char wireless_hash_file[512];
@@ -483,21 +483,21 @@ static void restore_failed_section_hashes(const ServiceRestartNeeds *failed_serv
         console_debug(&csl, "OpenNDS hash will be reloaded from: %s", opennds_hash_file);
     }
     
-    if (failed_services->wayru_collector) {
+    if (failed_services->fry_collector) {
         char collector_hash_file[512];
-        snprintf(collector_hash_file, sizeof(collector_hash_file), "%s/wayru-collector.hash", hash_dir);
+        snprintf(collector_hash_file, sizeof(collector_hash_file), "%s/fry-collector.hash", hash_dir);
         console_debug(&csl, "Collector hash will be reloaded from: %s", collector_hash_file);
     }
     
-    if (failed_services->wayru_agent) {
+    if (failed_services->fry_agent) {
         char agent_hash_file[512];
-        snprintf(agent_hash_file, sizeof(agent_hash_file), "%s/wayru-agent.hash", hash_dir);
+        snprintf(agent_hash_file, sizeof(agent_hash_file), "%s/fry-agent.hash", hash_dir);
         console_debug(&csl, "Agent hash will be reloaded from: %s", agent_hash_file);
     }
     
-    if (failed_services->wayru_config) {
+    if (failed_services->fry_config) {
         char config_hash_file[512];
-        snprintf(config_hash_file, sizeof(config_hash_file), "%s/wayru-config.hash", hash_dir);
+        snprintf(config_hash_file, sizeof(config_hash_file), "%s/fry-config.hash", hash_dir);
         console_debug(&csl, "Config hash will be reloaded from: %s", config_hash_file);
     }
     
@@ -596,14 +596,14 @@ int execute_services_rollback(ConfigApplicationResult *result, bool dev_mode) {
     if (strstr(result->failed_services, "opennds")) {
         failed_services.opennds = true;
     }
-    if (strstr(result->failed_services, "wayru-collector")) {
-        failed_services.wayru_collector = true;
+    if (strstr(result->failed_services, "fry-collector")) {
+        failed_services.fry_collector = true;
     }
-    if (strstr(result->failed_services, "wayru-agent")) {
-        failed_services.wayru_agent = true;
+    if (strstr(result->failed_services, "fry-agent")) {
+        failed_services.fry_agent = true;
     }
-    if (strstr(result->failed_services, "wayru-config")) {
-        failed_services.wayru_config = true;
+    if (strstr(result->failed_services, "fry-config")) {
+        failed_services.fry_config = true;
     }
     
     console_info(&csl, "Applying rollback configuration for each failed service individually...");
@@ -679,110 +679,110 @@ int execute_services_rollback(ConfigApplicationResult *result, bool dev_mode) {
         }
     }
     
-    if (failed_services.wayru_collector) {
-        console_info(&csl, "Rolling back wayru-collector configuration...");
-        char *collector_section = load_successful_config_section("wayru", "wayru-collector", dev_mode);
+    if (failed_services.fry_collector) {
+        console_info(&csl, "Rolling back fry-collector configuration...");
+        char *collector_section = load_successful_config_section("fry", "fry-collector", dev_mode);
         if (collector_section) {
-            // Create wrapper JSON for wayru-collector section
+            // Create wrapper JSON for fry-collector section
             json_object *wrapper = json_object_new_object();
             json_object *device_config = json_object_new_object();
-            json_object *wayru_array = json_object_new_array();
+            json_object *fry_array = json_object_new_array();
             json_object *collector_obj = json_tokener_parse(collector_section);
             
             if (collector_obj) {
-                json_object_array_add(wayru_array, collector_obj);
-                json_object_object_add(device_config, "wayru", wayru_array);
+                json_object_array_add(fry_array, collector_obj);
+                json_object_object_add(device_config, "fry", fry_array);
                 json_object_object_add(wrapper, "device_config", device_config);
                 
                 const char *collector_json = json_object_to_json_string(wrapper);
-                console_debug(&csl, "Applying wayru-collector rollback JSON (%zu bytes)", strlen(collector_json));
+                console_debug(&csl, "Applying fry-collector rollback JSON (%zu bytes)", strlen(collector_json));
                 
                 if (apply_config_without_restarts(collector_json, dev_mode) != 0) {
-                    console_error(&csl, "Failed to apply wayru-collector rollback configuration");
+                    console_error(&csl, "Failed to apply fry-collector rollback configuration");
                     total_rollback_errors++;
                 }
                 
                 json_object_put(wrapper);
             } else {
-                console_error(&csl, "Failed to parse wayru-collector rollback JSON");
+                console_error(&csl, "Failed to parse fry-collector rollback JSON");
                 total_rollback_errors++;
             }
             
             free(collector_section);
         } else {
-            console_error(&csl, "No wayru-collector rollback configuration available");
+            console_error(&csl, "No fry-collector rollback configuration available");
             total_rollback_errors++;
         }
     }
     
-    if (failed_services.wayru_agent) {
-        console_info(&csl, "Rolling back wayru-agent configuration...");
-        char *agent_section = load_successful_config_section("wayru", "wayru-agent", dev_mode);
+    if (failed_services.fry_agent) {
+        console_info(&csl, "Rolling back fry-agent configuration...");
+        char *agent_section = load_successful_config_section("fry", "fry-agent", dev_mode);
         if (agent_section) {
-            // Create wrapper JSON for wayru-agent section
+            // Create wrapper JSON for fry-agent section
             json_object *wrapper = json_object_new_object();
             json_object *device_config = json_object_new_object();
-            json_object *wayru_array = json_object_new_array();
+            json_object *fry_array = json_object_new_array();
             json_object *agent_obj = json_tokener_parse(agent_section);
             
             if (agent_obj) {
-                json_object_array_add(wayru_array, agent_obj);
-                json_object_object_add(device_config, "wayru", wayru_array);
+                json_object_array_add(fry_array, agent_obj);
+                json_object_object_add(device_config, "fry", fry_array);
                 json_object_object_add(wrapper, "device_config", device_config);
                 
                 const char *agent_json = json_object_to_json_string(wrapper);
-                console_debug(&csl, "Applying wayru-agent rollback JSON (%zu bytes)", strlen(agent_json));
+                console_debug(&csl, "Applying fry-agent rollback JSON (%zu bytes)", strlen(agent_json));
                 
                 if (apply_config_without_restarts(agent_json, dev_mode) != 0) {
-                    console_error(&csl, "Failed to apply wayru-agent rollback configuration");
+                    console_error(&csl, "Failed to apply fry-agent rollback configuration");
                     total_rollback_errors++;
                 }
                 
                 json_object_put(wrapper);
             } else {
-                console_error(&csl, "Failed to parse wayru-agent rollback JSON");
+                console_error(&csl, "Failed to parse fry-agent rollback JSON");
                 total_rollback_errors++;
             }
             
             free(agent_section);
         } else {
-            console_error(&csl, "No wayru-agent rollback configuration available");
+            console_error(&csl, "No fry-agent rollback configuration available");
             total_rollback_errors++;
         }
     }
     
-    if (failed_services.wayru_config) {
-        console_info(&csl, "Rolling back wayru-config configuration...");
-        char *config_section = load_successful_config_section("wayru", "wayru-config", dev_mode);
+    if (failed_services.fry_config) {
+        console_info(&csl, "Rolling back fry-config configuration...");
+        char *config_section = load_successful_config_section("fry", "fry-config", dev_mode);
         if (config_section) {
-            // Create wrapper JSON for wayru-config section
+            // Create wrapper JSON for fry-config section
             json_object *wrapper = json_object_new_object();
             json_object *device_config = json_object_new_object();
-            json_object *wayru_array = json_object_new_array();
+            json_object *fry_array = json_object_new_array();
             json_object *config_obj = json_tokener_parse(config_section);
             
             if (config_obj) {
-                json_object_array_add(wayru_array, config_obj);
-                json_object_object_add(device_config, "wayru", wayru_array);
+                json_object_array_add(fry_array, config_obj);
+                json_object_object_add(device_config, "fry", fry_array);
                 json_object_object_add(wrapper, "device_config", device_config);
                 
                 const char *config_json = json_object_to_json_string(wrapper);
-                console_debug(&csl, "Applying wayru-config rollback JSON (%zu bytes)", strlen(config_json));
+                console_debug(&csl, "Applying fry-config rollback JSON (%zu bytes)", strlen(config_json));
                 
                 if (apply_config_without_restarts(config_json, dev_mode) != 0) {
-                    console_error(&csl, "Failed to apply wayru-config rollback configuration");
+                    console_error(&csl, "Failed to apply fry-config rollback configuration");
                     total_rollback_errors++;
                 }
                 
                 json_object_put(wrapper);
             } else {
-                console_error(&csl, "Failed to parse wayru-config rollback JSON");
+                console_error(&csl, "Failed to parse fry-config rollback JSON");
                 total_rollback_errors++;
             }
             
             free(config_section);
         } else {
-            console_error(&csl, "No wayru-config rollback configuration available");
+            console_error(&csl, "No fry-config rollback configuration available");
             total_rollback_errors++;
         }
     }

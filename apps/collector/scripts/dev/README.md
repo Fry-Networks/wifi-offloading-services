@@ -1,6 +1,6 @@
 # Collector Development Quick Start Guide
 
-This guide helps you quickly set up and test the Wayru OS Collector in a local development environment.
+This guide helps you quickly set up and test the Fry OS Collector in a local development environment.
 
 ## Quick Start
 
@@ -15,7 +15,7 @@ just run collector
 # To manually edit the configuration:
 # 1. First run the collector once to set up the environment
 # 2. Edit the configuration file in the run directory
-vim run/collector/wayru-collector.config
+vim run/collector/fry-collector.config
 
 # 3. Restart the collector to apply changes
 ```
@@ -69,7 +69,7 @@ Note: The development configuration uses small batch sizes (5 logs) so you'll se
 
 ## Development Files
 
-- **`wayru-collector.config`** - UCI-style configuration file
+- **`fry-collector.config`** - UCI-style configuration file
 - **`test-logs.sh`** - Script to generate test syslog messages
 - **`mock-backend.py`** - Local HTTP server for testing
 - **`README.md`** - This guide
@@ -78,14 +78,14 @@ Note: The development configuration uses small batch sizes (5 logs) so you'll se
 
 The collector reads configuration from UCI-style config files in this order:
 
-1. `/etc/config/wayru-collector` (OpenWrt production)
-2. `./wayru-collector.config` (local development)
-3. `/tmp/wayru-collector.config` (fallback)
+1. `/etc/config/fry-collector` (OpenWrt production)
+2. `./fry-collector.config` (local development)
+3. `/tmp/fry-collector.config` (fallback)
 
 ### Configuration Options
 
 ```bash
-config wayru_collector 'wayru_collector'
+config fry_collector 'fry_collector'
     option enabled '1'                    # Enable/disable collector
     option logs_endpoint 'http://...'     # Backend URL
     option batch_size '10'                # Logs per batch
@@ -110,14 +110,14 @@ config wayru_collector 'wayru_collector'
 - `batch_size`: 50 logs
 - `batch_timeout_ms`: 10000ms
 - `queue_size`: 500 entries
-- `logs_endpoint`: `https://devices.wayru.tech/logs`
+- `logs_endpoint`: `https://devices.fry.tech/logs`
 
 ## What You'll See
 
 ### Collector Output (--dev mode)
 ```
 [collector] Collector service started in development mode (single-core optimized)
-[config] Configuration loaded from: ./wayru-collector.config
+[config] Configuration loaded from: ./fry-collector.config
 [config] Current Configuration:
 [config]   enabled: true
 [config]   logs_endpoint: http://localhost:8080/v1/logs

@@ -3,7 +3,7 @@
 #KEY_PATH="/etc/mosquitto/certs/device.key"
 #CSR_PATH="/etc/mosquitto/certs/device.csr"
 #CERT_PATH="/etc/mosquitto/certs/device.crt"
-#BACKEND_URL="https://wifi.api.internal.wayru.tech/certificate-signing/sign"
+#BACKEND_URL="https://wifi.api.internal.fry.tech/certificate-signing/sign"
 
 KEY_PATH=$1
 CSR_PATH=$2

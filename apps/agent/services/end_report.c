@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define DEV_PATH "."
-#define OPENWRT_PATH "/etc/wayru-os-services"
+#define OPENWRT_PATH "/etc/fry-os-services"
 #define DATA_PATH "/data"
 #define END_REPORT_PATH "/end-report"
 #define END_REPORT_ENDPOINT "/gateways/connections/end"

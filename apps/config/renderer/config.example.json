@@ -1,12 +1,12 @@
 {
   "device_config": {
-    "wayru": [
+    "fry": [
       {
-        "meta_config": "wayru-collector",
-        "meta_type": "wayru_collector",
-        "meta_section": "wayru_collector",
+        "meta_config": "fry-collector",
+        "meta_type": "fry_collector",
+        "meta_section": "fry_collector",
         "enabled": true,
-        "logs_endpoint": "https://devices.wayru.tech/logs",
+        "logs_endpoint": "https://devices.fry.tech/logs",
         "console_log_level": 7,
         "batch_size": 50,
         "batch_timeout_ms": 10000,
@@ -17,13 +17,13 @@
         "dev_mode": false
       },
       {
-        "meta_config": "wayru-agent",
-        "meta_type": "wayru_agent",
-        "meta_section": "wayru_agent",
+        "meta_config": "fry-agent",
+        "meta_type": "fry_agent",
+        "meta_section": "fry_agent",
         "enabled": true,
-        "main_api": "https://prod.api.az.wayru.tech",
-        "accounting_api": "https://wifi.api.wayru.tech",
-        "devices_api": "https://devices.wayru.tech",
+        "main_api": "https://prod.api.az.fry.tech",
+        "accounting_api": "https://wifi.api.fry.tech",
+        "devices_api": "https://devices.fry.tech",
         "access_interval": 10800,
         "device_status_interval": 120,
         "console_log_level": 7,
@@ -37,7 +37,7 @@
         "speed_test_maximum_interval": 21600,
         "speed_test_latency_attempts": 4,
         "device_context_interval": 900,
-        "mqtt_broker_url": "mqtt.wayru.tech",
+        "mqtt_broker_url": "mqtt.fry.tech",
         "mqtt_keepalive": 30,
         "mqtt_task_interval": 15,
         "reboot_enabled": true,
@@ -54,12 +54,12 @@
         "package_update_interval": 20000
       },
       {
-        "meta_config": "wayru-config",
-        "meta_type": "wayru_config",
-        "meta_section": "wayru_config",
+        "meta_config": "fry-config",
+        "meta_type": "fry_config",
+        "meta_section": "fry_config",
         "enabled": true,
         "console_log_level": "7",
-        "config_endpoint": "https://devices.wayru.tech/device_config",
+        "config_endpoint": "https://devices.fry.tech/device_config",
         "config_interval_ms": 40000
       }
     ],
@@ -87,7 +87,7 @@
         "device": "radio0",
         "network": "encrypted",
         "mode": "ap",
-        "ssid": "Wayru Operator",
+        "ssid": "Fry Operator",
         "encryption": "psk2",
         "disabled": false,
         "key": "988Dh283zX",
@@ -100,7 +100,7 @@
         "device": "radio1",
         "network": "encrypted",
         "mode": "ap",
-        "ssid": "Wayru Operator",
+        "ssid": "Fry Operator",
         "encryption": "psk2",
         "disabled": false,
         "key": "988Dh283zX",
@@ -113,7 +113,7 @@
         "device": "radio0",
         "network": "captive",
         "mode": "ap",
-        "ssid": ".Wayru WiFi",
+        "ssid": ".Fry WiFi",
         "encryption": "none",
         "disabled": false,
         "isolate": false
@@ -125,7 +125,7 @@
         "device": "radio1",
         "network": "captive",
         "mode": "ap",
-        "ssid": ".Wayru WiFi Test",
+        "ssid": ".Fry WiFi Test",
         "encryption": "none",
         "disabled": false,
         "isolate": false
@@ -142,12 +142,12 @@
         "faskey": "qLULCQufhZVHkiPpNkC9RDHjX9A9Fud6",
         "faspath": "/",
         "fasport": "443",
-        "fasremotefqdn": "fas.wayru.tech",
+        "fasremotefqdn": "fas.fry.tech",
         "fasremoteip": "52.230.158.179",
         "gatewayinterface": "br-lan.10",
         "gatewayname": "cfbe115a-45f2-41ad-8bb9-649b438ae6fe",
         "maxclients": "250",
-        "binauth": "/etc/wayru-agent/scripts/nds-binauth.sh",
+        "binauth": "/etc/fry-agent/scripts/nds-binauth.sh",
         "enable_serial_number_suffix": "0",
         "users_to_router": [
           "allow tcp port 53",
@@ -163,7 +163,7 @@
           "allow tcp port 40500"
         ],
         "walledgarden_fqdn_list": [
-          "ingest.sentry.io api.mapbox.com portal.wayru.tech portal.wayru.io portal.internal.wayru.tech api.wayru.tech api.internal.wayru.tech wifi.api.wayru.tech wifi.api.internal.wayru.tech"
+          "ingest.sentry.io api.mapbox.com portal.fry.tech portal.fry.io portal.internal.fry.tech api.fry.tech api.internal.fry.tech wifi.api.fry.tech wifi.api.internal.fry.tech"
         ],
         "walledgarden_port_list": [
           "443 22"

@@ -13,12 +13,12 @@ static Console csl = {.topic = "renderer"};
 
 //PATHS FOR GRANULAR HASHES
 #define DEV_HASH_DIR "./scripts/dev/hashes"
-#define PROD_HASH_DIR "/etc/wayru-config/hashes"
+#define PROD_HASH_DIR "/etc/fry-config/hashes"
 
 #define WIRELESS_HASH_FILE "wireless.hash"
-#define AGENT_HASH_FILE "wayru-agent.hash"
-#define COLLECTOR_HASH_FILE "wayru-collector.hash"
-#define CONFIG_HASH_FILE "wayru-config.hash"
+#define AGENT_HASH_FILE "fry-agent.hash"
+#define COLLECTOR_HASH_FILE "fry-collector.hash"
+#define CONFIG_HASH_FILE "fry-config.hash"
 #define OPENNDS_HASH_FILE "opennds.hash"
 
 //VARIABLES FOR GRANULAR HASH IN MEMORY
@@ -39,12 +39,12 @@ static bool opennds_hash_loaded = false;
 static bool global_dev_mode = false;
 
 // **UNIFIED SCRIPT PATHS - SINGLE renderer_applier.uc**
-#define DEV_CONFIG_FILE "./scripts/wayru_config.json"
-#define DEV_RENDERER_SCRIPT "./scripts/renderer_applier.uc" 
+#define DEV_CONFIG_FILE "./scripts/fry_config.json"
+#define DEV_RENDERER_SCRIPT "./scripts/renderer_applier.uc"
 #define DEV_UCODE_PATH "/usr/local/bin/ucode"
 
-#define OPENWRT_CONFIG_FILE "/tmp/wayru_config.json"
-#define OPENWRT_RENDERER_SCRIPT "/etc/wayru-config/scripts/renderer_applier.uc"
+#define OPENWRT_CONFIG_FILE "/tmp/fry_config.json"
+#define OPENWRT_RENDERER_SCRIPT "/etc/fry-config/scripts/renderer_applier.uc"
 #define OPENWRT_UCODE_PATH "/usr/bin/ucode"
 
 
@@ -156,14 +156,14 @@ static char* extract_config_section(const char *json_config, const char *section
         if (json_object_object_get_ex(device_config, "opennds", &opennds_array)) {
             section_json = strdup(json_object_to_json_string(opennds_array));
         }
-    } else if (strcmp(section_type, "wayru") == 0) {
-        // Extract specific wayru section by meta_config
-        json_object *wayru_array = NULL;
-        if (json_object_object_get_ex(device_config, "wayru", &wayru_array)) {
-            int array_len = json_object_array_length(wayru_array);
+    } else if (strcmp(section_type, "fry") == 0) {
+        // Extract specific fry section by meta_config
+        json_object *fry_array = NULL;
+        if (json_object_object_get_ex(device_config, "fry", &fry_array)) {
+            int array_len = json_object_array_length(fry_array);
             
             for (int i = 0; i < array_len; i++) {
-                json_object *section = json_object_array_get_idx(wayru_array, i);
+                json_object *section = json_object_array_get_idx(fry_array, i);
                 json_object *meta_config = NULL;
                 
                 if (json_object_object_get_ex(section, "meta_config", &meta_config)) {
@@ -243,21 +243,21 @@ bool config_affects_wireless(const char *json_config, bool dev_mode) {
                                 &last_wireless_hash, &wireless_hash_loaded, dev_mode);
 }
 
-// Check if wayru-agent configuration changed
-bool config_affects_wayru_agent(const char *json_config, bool dev_mode) {
-    return check_section_changed(json_config, "wayru", "wayru-agent", AGENT_HASH_FILE,
+// Check if fry-agent configuration changed
+bool config_affects_fry_agent(const char *json_config, bool dev_mode) {
+    return check_section_changed(json_config, "fry", "fry-agent", AGENT_HASH_FILE,
                                 &last_agent_hash, &agent_hash_loaded, dev_mode);
 }
 
-// Check if wayru-collector configuration changed
-bool config_affects_wayru_collector(const char *json_config, bool dev_mode) {
-    return check_section_changed(json_config, "wayru", "wayru-collector", COLLECTOR_HASH_FILE,
+// Check if fry-collector configuration changed
+bool config_affects_fry_collector(const char *json_config, bool dev_mode) {
+    return check_section_changed(json_config, "fry", "fry-collector", COLLECTOR_HASH_FILE,
                                 &last_collector_hash, &collector_hash_loaded, dev_mode);
 }
 
-// Check if wayru-config configuration changed
-bool config_affects_wayru_config(const char *json_config, bool dev_mode) {
-    return check_section_changed(json_config, "wayru", "wayru-config", CONFIG_HASH_FILE,
+// Check if fry-config configuration changed
+bool config_affects_fry_config(const char *json_config, bool dev_mode) {
+    return check_section_changed(json_config, "fry", "fry-config", CONFIG_HASH_FILE,
                                 &last_config_hash, &config_hash_loaded, dev_mode);
 }
 
@@ -426,7 +426,7 @@ static int run_renderer_script(const char *script_path, const char *config_file,
     return 0;
 }
 
-// Apply configuration without service restarts (wayru-config manages restarts)
+// Apply configuration without service restarts (fry-config manages restarts)
 int apply_config_without_restarts(const char *json_config, bool dev_mode) {
     if (!json_config) {
         console_error(&csl, "Invalid JSON config");
@@ -456,18 +456,18 @@ void save_wireless_hash_after_success(const char *json_config, bool dev_mode) {
                                    &last_wireless_hash, dev_mode);
 }
 
-void save_wayru_agent_hash_after_success(const char *json_config, bool dev_mode) {
-    save_section_hash_after_success(json_config, "wayru", "wayru-agent", AGENT_HASH_FILE,
+void save_fry_agent_hash_after_success(const char *json_config, bool dev_mode) {
+    save_section_hash_after_success(json_config, "fry", "fry-agent", AGENT_HASH_FILE,
                                    &last_agent_hash, dev_mode);
 }
 
-void save_wayru_collector_hash_after_success(const char *json_config, bool dev_mode) {
-    save_section_hash_after_success(json_config, "wayru", "wayru-collector", COLLECTOR_HASH_FILE,
+void save_fry_collector_hash_after_success(const char *json_config, bool dev_mode) {
+    save_section_hash_after_success(json_config, "fry", "fry-collector", COLLECTOR_HASH_FILE,
                                    &last_collector_hash, dev_mode);
 }
 
-void save_wayru_config_hash_after_success(const char *json_config, bool dev_mode) {
-    save_section_hash_after_success(json_config, "wayru", "wayru-config", CONFIG_HASH_FILE,
+void save_fry_config_hash_after_success(const char *json_config, bool dev_mode) {
+    save_section_hash_after_success(json_config, "fry", "fry-config", CONFIG_HASH_FILE,
                                    &last_config_hash, dev_mode);
 }
 

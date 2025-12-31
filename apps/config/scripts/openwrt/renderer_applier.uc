@@ -43,8 +43,8 @@ function clearAllSectionOptions(ctx, packageName, sectionName) {
     }
 }
 
-// Clean all options in the wayru section
-function cleanWayruSection(ctx, packageName, sectionName) {
+// Clean all options in the fry section
+function cleanFrySection(ctx, packageName, sectionName) {
     printf("Cleaning existing %s section: %s\n", packageName, sectionName);
     return clearAllSectionOptions(ctx, packageName, sectionName);
 }
@@ -152,21 +152,21 @@ function applyWirelessConfig(ctx, config) {
 }
 
 // Clean all options before applying
-function applyWayruConfig(ctx, config) {
-    let wayruArray = config.device_config?.wayru;
-    if (!wayruArray || type(wayruArray) != 'array') {
-        printf("No Wayru configuration found\n");
+function applyFryConfig(ctx, config) {
+    let fryArray = config.device_config?.fry;
+    if (!fryArray || type(fryArray) != 'array') {
+        printf("No Fry configuration found\n");
         return true; 
     }
 
-    printf("Applying Wayru services configuration...\n");
-    for (let section in wayruArray) {
+    printf("Applying Fry services configuration...\n");
+    for (let section in fryArray) {
         let pkg = section.meta_config;
         let t = section.meta_type;
         let sectionName = section.meta_section;
 
         // Clean all options in the section
-        if (sectionName && !cleanWayruSection(ctx, pkg, sectionName)) {
+        if (sectionName && !cleanFrySection(ctx, pkg, sectionName)) {
             return false;
         }
         
@@ -244,8 +244,8 @@ function main() {
         return 1;
     }
 
-    if (!applyWayruConfig(ctx, config)) {
-        printf("Error: Failed to apply Wayru configuration\n");
+    if (!applyFryConfig(ctx, config)) {
+        printf("Error: Failed to apply Fry configuration\n");
         return 1;
     }
 
@@ -256,7 +256,7 @@ function main() {
 
     // COMMIT PACKAGES WITH ERROR HANDLING
     printf("Committing configuration changes...\n");
-    let packages = ['wireless', 'wayru-agent', 'wayru-collector', 'wayru-config', 'opennds'];
+    let packages = ['wireless', 'fry-agent', 'fry-collector', 'fry-config', 'opennds'];
     
     for (let pkg in packages) {
         try {
@@ -272,7 +272,7 @@ function main() {
     }
 
     printf("Configuration application completed successfully\n");
-    printf("Services will be restarted by wayru-config main process\n");
+    printf("Services will be restarted by fry-config main process\n");
     return 0;
 }
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(wayru-os-services C)
+project(fry-os-services C)
 
 # Definitions
 add_definitions(-Wall)
@@ -34,7 +34,7 @@ find_library(lua_library names lua lua5.3 REQUIRED)
 # Create granular static libraries by functionality
 
 # Core utilities (no external deps)
-add_library(wayru-core STATIC
+add_library(fry-core STATIC
     lib/core/console.c
     lib/core/result.c
     lib/core/retry.c
@@ -43,44 +43,44 @@ add_library(wayru-core STATIC
     lib/core/scheduler.c
     lib/core/uloop_scheduler.c
 )
-target_include_directories(wayru-core PUBLIC
+target_include_directories(fry-core PUBLIC
     lib/core
     lib
 )
 
-target_link_libraries(wayru-core
+target_link_libraries(fry-core
     PUBLIC
     ${ubox_library}
 )
 
 # HTTP/networking utilities
-add_library(wayru-http STATIC
+add_library(fry-http STATIC
     lib/http/curl_helpers.c
     lib/http/http-requests.c
 )
-target_include_directories(wayru-http PUBLIC
+target_include_directories(fry-http PUBLIC
     lib/http
     lib
 )
-target_link_libraries(wayru-http
+target_link_libraries(fry-http
     PUBLIC
-    wayru-core
+    fry-core
     ${curl_library}
 )
 
 # Cryptography utilities
-add_library(wayru-crypto STATIC
+add_library(fry-crypto STATIC
     lib/crypto/cert_audit.c
     lib/crypto/csr.c
     lib/crypto/key_pair.c
 )
-target_include_directories(wayru-crypto PUBLIC
+target_include_directories(fry-crypto PUBLIC
     lib/crypto
     lib
 )
-target_link_libraries(wayru-crypto
+target_link_libraries(fry-crypto
     PUBLIC
-    wayru-core
+    fry-core
     ${ssl_library}
     ${crypto_library}
     ${json_c_library}
@@ -90,22 +90,22 @@ target_link_libraries(wayru-crypto
 file(GLOB_RECURSE AGENT_SERVICE_SOURCES
     "apps/agent/services/*.c"
 )
-add_executable(wayru-agent
+add_executable(fry-agent
     apps/agent/main.c
     ${AGENT_SERVICE_SOURCES}
 )
-target_include_directories(wayru-agent PRIVATE
+target_include_directories(fry-agent PRIVATE
     apps/agent
     lib/core
     lib/http
     lib/crypto
     lib
 )
-target_link_libraries(wayru-agent
+target_link_libraries(fry-agent
     PRIVATE
-    wayru-core
-    wayru-http
-    wayru-crypto
+    fry-core
+    fry-http
+    fry-crypto
     ${ubus_library}
     ${ubox_library}
     ${blobmsg_json_library}
@@ -114,26 +114,26 @@ target_link_libraries(wayru-agent
 )
 
 # Config app - Renderer and applier
-add_executable(wayru-config
+add_executable(fry-config
     apps/config/main.c
     apps/config/sync/sync.c
     apps/config/sync/token_manager.c
-    apps/config/sync/openwisp_manager.c 
+    apps/config/sync/openwisp_manager.c
     apps/config/sync/rollback.c
     apps/config/renderer/renderer.c
     apps/config/config.c
     apps/config/ubus.c
 )
-target_include_directories(wayru-config PRIVATE
+target_include_directories(fry-config PRIVATE
     apps/config
     lib/core
     lib/http
     lib
 )
-target_link_libraries(wayru-config
+target_link_libraries(fry-config
     PRIVATE
-    wayru-core
-    wayru-http
+    fry-core
+    fry-http
     ${json_c_library}
     ${ubus_library}
     ${ubox_library}
@@ -141,22 +141,22 @@ target_link_libraries(wayru-config
 )
 
 # Collector app - Log collection and forwarding
-add_executable(wayru-collector
+add_executable(fry-collector
     apps/collector/main.c
     apps/collector/ubus.c
     apps/collector/collect.c
     apps/collector/config.c
 )
-target_include_directories(wayru-collector PRIVATE
+target_include_directories(fry-collector PRIVATE
     apps/collector
     lib/core
     lib/http
     lib
 )
-target_link_libraries(wayru-collector
+target_link_libraries(fry-collector
     PRIVATE
-    wayru-core
-    wayru-http
+    fry-core
+    fry-http
     ${ubus_library}
     ${ubox_library}
     ${blobmsg_json_library}
@@ -165,7 +165,7 @@ target_link_libraries(wayru-collector
 )
 
 # Install targets
-install(TARGETS wayru-core wayru-http wayru-crypto ARCHIVE DESTINATION lib)
-install(TARGETS wayru-agent wayru-config wayru-collector RUNTIME DESTINATION bin)
+install(TARGETS fry-core fry-http fry-crypto ARCHIVE DESTINATION lib)
+install(TARGETS fry-agent fry-config fry-collector RUNTIME DESTINATION bin)
 
 enable_testing()

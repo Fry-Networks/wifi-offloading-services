@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MODEL="${WAYRU_MODEL:-unknown}"
+MODEL="${FRY_MODEL:-unknown}"
 
 # Return different MACs based on device name for testing
 

@@ -28,7 +28,7 @@ if [[ -z "$RELEASE_TRACK" ]]; then
 fi
 
 # --- CONFIGURATION ---
-package_name="wayru-os-services"
+package_name="fry-os-services"
 api_url="$API_URL"
 bearer_token="$BEARER_TOKEN"
 release_track="$RELEASE_TRACK"

@@ -13,14 +13,14 @@ cat > /tmp/do_upgrade.sh << EOF
 sleep 5  # Give the parent process time to exit
 
 # Remove old package
-opkg remove wayru-os-services
+opkg remove fry-os-services
 
 # Clean up old configuration files
-rm -f /etc/config/wayru-os-services
-rm -f /etc/config/wayru-os-services-opkg
-rm -f /etc/config/wayru-agent
-rm -f /etc/config/wayru-config
-rm -f /etc/config/wayru-collector
+rm -f /etc/config/fry-os-services
+rm -f /etc/config/fry-os-services-opkg
+rm -f /etc/config/fry-agent
+rm -f /etc/config/fry-config
+rm -f /etc/config/fry-collector
 
 # Install new package
 opkg install "$package_path"

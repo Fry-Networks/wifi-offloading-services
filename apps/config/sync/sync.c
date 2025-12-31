@@ -18,7 +18,7 @@
 static Console csl = {.topic = "config-sync"};
 
 #define DEV_GLOBAL_HASH_FILE "./scripts/dev/hashes/global_config.hash"
-#define PROD_GLOBAL_HASH_FILE "/etc/wayru-config/hashes/global_config.hash"
+#define PROD_GLOBAL_HASH_FILE "/etc/fry-config/hashes/global_config.hash"
 
 // Production mode with detailed error capture
 static ServiceRestartNeeds last_successful_services = {false, false, false, false, false};
@@ -65,21 +65,21 @@ static void save_successful_sections(const char *json_config, const ServiceResta
         }
     }
     
-    if (successful_needs->wayru_collector) {
-        if (save_successful_config_section(json_config, "wayru", "wayru-collector", "current", dev_mode) == 0) {
-            console_debug(&csl, "Saved successful wayru-collector configuration JSON");
+    if (successful_needs->fry_collector) {
+        if (save_successful_config_section(json_config, "fry", "fry-collector", "current", dev_mode) == 0) {
+            console_debug(&csl, "Saved successful fry-collector configuration JSON");
         }
     }
-    
-    if (successful_needs->wayru_agent) {
-        if (save_successful_config_section(json_config, "wayru", "wayru-agent", "current", dev_mode) == 0) {
-            console_debug(&csl, "Saved successful wayru-agent configuration JSON");
+
+    if (successful_needs->fry_agent) {
+        if (save_successful_config_section(json_config, "fry", "fry-agent", "current", dev_mode) == 0) {
+            console_debug(&csl, "Saved successful fry-agent configuration JSON");
         }
     }
-    
-    if (successful_needs->wayru_config) {
-        if (save_successful_config_section(json_config, "wayru", "wayru-config", "current", dev_mode) == 0) {
-            console_debug(&csl, "Saved successful wayru-config configuration JSON");
+
+    if (successful_needs->fry_config) {
+        if (save_successful_config_section(json_config, "fry", "fry-config", "current", dev_mode) == 0) {
+            console_debug(&csl, "Saved successful fry-config configuration JSON");
         }
     }
 }
@@ -160,19 +160,19 @@ static void build_affected_services_list(const ServiceRestartNeeds *needs, char 
         strcat(output, "wireless");
         first = false;
     }
-    if (needs->wayru_agent) {
+    if (needs->fry_agent) {
         if (!first) strcat(output, ", ");
-        strcat(output, "wayru-agent");
+        strcat(output, "fry-agent");
         first = false;
     }
-    if (needs->wayru_collector) {
+    if (needs->fry_collector) {
         if (!first) strcat(output, ", ");
-        strcat(output, "wayru-collector");
+        strcat(output, "fry-collector");
         first = false;
     }
-    if (needs->wayru_config) {
+    if (needs->fry_config) {
         if (!first) strcat(output, ", ");
-        strcat(output, "wayru-config");
+        strcat(output, "fry-config");
         first = false;
     }
     if (needs->opennds) {
@@ -284,16 +284,16 @@ static ServiceRestartNeeds analyze_restart_needs(const char *json, bool dev_mode
 
     // Check each service section for changes using hash comparison
     needs.wireless = config_affects_wireless(json, dev_mode);
-    needs.wayru_agent = config_affects_wayru_agent(json, dev_mode);
-    needs.wayru_collector = config_affects_wayru_collector(json, dev_mode);
-    needs.wayru_config = config_affects_wayru_config(json, dev_mode);
+    needs.fry_agent = config_affects_fry_agent(json, dev_mode);
+    needs.fry_collector = config_affects_fry_collector(json, dev_mode);
+    needs.fry_config = config_affects_fry_config(json, dev_mode);
     needs.opennds = config_affects_opennds(json, dev_mode);
 
     console_debug(&csl, "Restart analysis - wireless: %s, agent: %s, collector: %s, config: %s, opennds: %s",
                  needs.wireless ? "YES" : "no",
-                 needs.wayru_agent ? "YES" : "no",
-                 needs.wayru_collector ? "YES" : "no",
-                 needs.wayru_config ? "YES" : "no",
+                 needs.fry_agent ? "YES" : "no",
+                 needs.fry_collector ? "YES" : "no",
+                 needs.fry_config ? "YES" : "no",
                  needs.opennds ? "YES" : "no");
 
     return needs;
@@ -310,24 +310,24 @@ static void handle_dev_mode_restart(const ServiceRestartNeeds *needs, ConfigAppl
         console_info(&csl, "Would reload: wifi configuration");
         add_service_to_list(successful_services, "wireless", &first);
     }
-    if (needs->wayru_collector) {
-        console_info(&csl, "Would restart: wayru-collector service");
-        add_service_to_list(successful_services, "wayru-collector", &first);
+    if (needs->fry_collector) {
+        console_info(&csl, "Would restart: fry-collector service");
+        add_service_to_list(successful_services, "fry-collector", &first);
     }
-    if (needs->wayru_agent) {
-        console_info(&csl, "Would restart: wayru-agent service");
-        add_service_to_list(successful_services, "wayru-agent", &first);
+    if (needs->fry_agent) {
+        console_info(&csl, "Would restart: fry-agent service");
+        add_service_to_list(successful_services, "fry-agent", &first);
     }
-    if (needs->wayru_config) {
-        console_info(&csl, "Would reload: wayru-config configuration");
-        add_service_to_list(successful_services, "wayru-config", &first);
+    if (needs->fry_config) {
+        console_info(&csl, "Would reload: fry-config configuration");
+        add_service_to_list(successful_services, "fry-config", &first);
     }
     if (needs->opennds) {
         console_info(&csl, "Would restart: opennds service");
         add_service_to_list(successful_services, "opennds", &first);
     }
 
-    if (!needs->wireless && !needs->wayru_collector && !needs->wayru_agent && !needs->wayru_config && !needs->opennds) {
+    if (!needs->wireless && !needs->fry_collector && !needs->fry_agent && !needs->fry_config && !needs->opennds) {
         console_info(&csl, "No services need restart");
     }
     
@@ -432,26 +432,26 @@ static int restart_services_production(const ServiceRestartNeeds *needs, ConfigA
         sleep(2);
     }
 
-    // 3. Restart wayru-collector
-    if (needs->wayru_collector) {
-        console_info(&csl, "Restarting wayru-collector...");
-        
-        if (execute_service_command("/etc/init.d/wayru-collector reload", "wayru-collector", service_error, sizeof(service_error)) == 0) {
-            console_info(&csl, "wayru-collector reloaded successfully");
-            add_service_to_list(successful_services, "wayru-collector", &first_success);
-            successful_needs.wayru_collector = true;
+    // 3. Restart fry-collector
+    if (needs->fry_collector) {
+        console_info(&csl, "Restarting fry-collector...");
+
+        if (execute_service_command("/etc/init.d/fry-collector reload", "fry-collector", service_error, sizeof(service_error)) == 0) {
+            console_info(&csl, "fry-collector reloaded successfully");
+            add_service_to_list(successful_services, "fry-collector", &first_success);
+            successful_needs.fry_collector = true;
         } else {
-            console_warn(&csl, "wayru-collector reload failed, trying restart...");
-            
-            if (execute_service_command("/etc/init.d/wayru-collector restart", "wayru-collector", service_error, sizeof(service_error)) == 0) {
-                console_info(&csl, "wayru-collector restarted successfully");
-                add_service_to_list(successful_services, "wayru-collector", &first_success);
-                successful_needs.wayru_collector = true;
+            console_warn(&csl, "fry-collector reload failed, trying restart...");
+
+            if (execute_service_command("/etc/init.d/fry-collector restart", "fry-collector", service_error, sizeof(service_error)) == 0) {
+                console_info(&csl, "fry-collector restarted successfully");
+                add_service_to_list(successful_services, "fry-collector", &first_success);
+                successful_needs.fry_collector = true;
             } else {
-                console_error(&csl, "wayru-collector restart failed: %s", service_error);
+                console_error(&csl, "fry-collector restart failed: %s", service_error);
                 total_errors++;
-                add_service_to_list(failed_services, "wayru-collector", &first_failure);
-                
+                add_service_to_list(failed_services, "fry-collector", &first_failure);
+
                 if (strlen(detailed_errors) > 0) strcat(detailed_errors, "; ");
                 strcat(detailed_errors, service_error);
             }
@@ -459,26 +459,26 @@ static int restart_services_production(const ServiceRestartNeeds *needs, ConfigA
         sleep(2);
     }
 
-    // 4. Restart wayru-agent
-    if (needs->wayru_agent) {
-        console_info(&csl, "Restarting wayru-agent...");
-        
-        if (execute_service_command("/etc/init.d/wayru-agent reload", "wayru-agent", service_error, sizeof(service_error)) == 0) {
-            console_info(&csl, "wayru-agent reloaded successfully");
-            add_service_to_list(successful_services, "wayru-agent", &first_success);
-            successful_needs.wayru_agent = true;
+    // 4. Restart fry-agent
+    if (needs->fry_agent) {
+        console_info(&csl, "Restarting fry-agent...");
+
+        if (execute_service_command("/etc/init.d/fry-agent reload", "fry-agent", service_error, sizeof(service_error)) == 0) {
+            console_info(&csl, "fry-agent reloaded successfully");
+            add_service_to_list(successful_services, "fry-agent", &first_success);
+            successful_needs.fry_agent = true;
         } else {
-            console_warn(&csl, "wayru-agent reload failed, trying restart...");
-            
-            if (execute_service_command("/etc/init.d/wayru-agent restart", "wayru-agent", service_error, sizeof(service_error)) == 0) {
-                console_info(&csl, "wayru-agent restarted successfully");
-                add_service_to_list(successful_services, "wayru-agent", &first_success);
-                successful_needs.wayru_agent = true;
+            console_warn(&csl, "fry-agent reload failed, trying restart...");
+
+            if (execute_service_command("/etc/init.d/fry-agent restart", "fry-agent", service_error, sizeof(service_error)) == 0) {
+                console_info(&csl, "fry-agent restarted successfully");
+                add_service_to_list(successful_services, "fry-agent", &first_success);
+                successful_needs.fry_agent = true;
             } else {
-                console_error(&csl, "wayru-agent restart failed: %s", service_error);
+                console_error(&csl, "fry-agent restart failed: %s", service_error);
                 total_errors++;
-                add_service_to_list(failed_services, "wayru-agent", &first_failure);
-                
+                add_service_to_list(failed_services, "fry-agent", &first_failure);
+
                 if (strlen(detailed_errors) > 0) strcat(detailed_errors, "; ");
                 strcat(detailed_errors, service_error);
             }
@@ -486,19 +486,19 @@ static int restart_services_production(const ServiceRestartNeeds *needs, ConfigA
         sleep(2);
     }
 
-    // 5. Reload wayru-config last
-    if (needs->wayru_config) {
-        console_info(&csl, "wayru-config configuration changed, triggering reload...");
-        
-        if (execute_service_command("/etc/init.d/wayru-config reload", "wayru-config", service_error, sizeof(service_error)) == 0) {
-            console_info(&csl, "wayru-config reload triggered successfully");
-            add_service_to_list(successful_services, "wayru-config", &first_success);
-            successful_needs.wayru_config = true;
+    // 5. Reload fry-config last
+    if (needs->fry_config) {
+        console_info(&csl, "fry-config configuration changed, triggering reload...");
+
+        if (execute_service_command("/etc/init.d/fry-config reload", "fry-config", service_error, sizeof(service_error)) == 0) {
+            console_info(&csl, "fry-config reload triggered successfully");
+            add_service_to_list(successful_services, "fry-config", &first_success);
+            successful_needs.fry_config = true;
         } else {
-            console_warn(&csl, "wayru-config reload failed: %s", service_error);
+            console_warn(&csl, "fry-config reload failed: %s", service_error);
             total_errors++;
-            add_service_to_list(failed_services, "wayru-config", &first_failure);
-            
+            add_service_to_list(failed_services, "fry-config", &first_failure);
+
             if (strlen(detailed_errors) > 0) strcat(detailed_errors, "; ");
             strcat(detailed_errors, service_error);
         }
@@ -537,16 +537,16 @@ static void save_all_successful_section_hashes(const char *json_config, const Se
         save_wireless_hash_after_success(json_config, dev_mode);
     }
     
-    if (successful_needs->wayru_agent) {
-        save_wayru_agent_hash_after_success(json_config, dev_mode);
+    if (successful_needs->fry_agent) {
+        save_fry_agent_hash_after_success(json_config, dev_mode);
     }
-    
-    if (successful_needs->wayru_collector) {
-        save_wayru_collector_hash_after_success(json_config, dev_mode);
+
+    if (successful_needs->fry_collector) {
+        save_fry_collector_hash_after_success(json_config, dev_mode);
     }
-    
-    if (successful_needs->wayru_config) {
-        save_wayru_config_hash_after_success(json_config, dev_mode);
+
+    if (successful_needs->fry_config) {
+        save_fry_config_hash_after_success(json_config, dev_mode);
     }
     
     if (successful_needs->opennds) {
@@ -831,14 +831,14 @@ ConfigSyncContext *start_config_sync_service(const char *endpoint,
     // Configure renderer for appropriate mode
     set_renderer_dev_mode(dev_mode);
 
-    // Configure Openwisp to ignore wayru-managed sections
+    // Configure Openwisp to ignore fry-managed sections
     console_info(&csl, "Configuring Openwisp exclusions...");
     if (configure_openwisp_exclusions(dev_mode) != 0) {
         console_warn(&csl, "Openwisp configuration failed, continuing anyway...");
     }
     
     console_info(&csl, "Section hashes will be stored in: %s",
-                 dev_mode ? "./scripts/dev/hashes" : "/etc/wayru-config/hashes");
+                 dev_mode ? "./scripts/dev/hashes" : "/etc/fry-config/hashes");
     
     console_info(&csl, "Global config hash will be stored in: %s",
                  dev_mode ? DEV_GLOBAL_HASH_FILE : PROD_GLOBAL_HASH_FILE);

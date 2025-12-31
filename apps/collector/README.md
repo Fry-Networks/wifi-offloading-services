@@ -1,13 +1,13 @@
-# Wayru OS Collector - Single-Core Optimized
+# Fry OS Collector - Single-Core Optimized
 
-The collector app is a standalone service optimized for single-core embedded devices that collects logs from the system via UBUS/syslog and forwards them to the Wayru backend for processing.
+The collector app is a standalone service optimized for single-core embedded devices that collects logs from the system via UBUS/syslog and forwards them to the Fry backend for processing.
 
 ## Architecture
 
 The collector uses a **single-threaded event-driven architecture** optimized for resource-constrained devices:
 
 1. **Main Event Loop (uloop)**: Handles all events including UBUS messages, timers, and HTTP operations
-2. **UBUS Integration**: Communicates with wayru-agent for access token retrieval and log event subscription
+2. **UBUS Integration**: Communicates with fry-agent for access token retrieval and log event subscription
 3. **Memory Pool**: Pre-allocated entry pool to avoid malloc/free overhead
 4. **State Machine**: HTTP operations managed through a simple state machine
 5. **Circular Queue**: Lock-free queue for log entries (single-threaded access)
@@ -42,7 +42,7 @@ The collector uses a **single-threaded event-driven architecture** optimized for
 - **Intelligent batching**: Adaptive batching based on queue load and timeouts
 - **HTTP state machine**: Non-blocking HTTP operations with retry logic
 - **Automatic reconnection**: UBUS and HTTP connection recovery
-- **Access token authentication**: Retrieves Bearer tokens from wayru-agent via UBUS
+- **Access token authentication**: Retrieves Bearer tokens from fry-agent via UBUS
 - **Token refresh management**: Automatic token validation and refresh cycles
 - **Memory pool management**: Efficient memory usage with entry recycling
 - **Queue overflow protection**: Graceful handling of high log volumes
@@ -53,14 +53,14 @@ The collector uses a **single-threaded event-driven architecture** optimized for
 
 The collector uses UCI-style configuration files for all settings. Configuration files are loaded in this order of preference:
 
-1. `/etc/config/wayru-collector` (OpenWrt production)
-2. `./wayru-collector.config` (local development - automatically copied by `just run collector`)
-3. `/tmp/wayru-collector.config` (fallback)
+1. `/etc/config/fry-collector` (OpenWrt production)
+2. `./fry-collector.config` (local development - automatically copied by `just run collector`)
+3. `/tmp/fry-collector.config` (fallback)
 
 ### Configuration Format
 
 ```bash
-config wayru_collector 'wayru_collector'
+config fry_collector 'fry_collector'
     option enabled '1'                    # Enable/disable collector
     option logs_endpoint 'https://...'    # Backend URL
     option batch_size '50'                # Logs per batch
@@ -78,7 +78,7 @@ config wayru_collector 'wayru_collector'
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `enabled` | boolean | `1` | Enable/disable the collector service |
-| `logs_endpoint` | string | `https://devices.wayru.tech/logs` | Backend API endpoint for log submission |
+| `logs_endpoint` | string | `https://devices.fry.tech/logs` | Backend API endpoint for log submission |
 | `batch_size` | integer | `50` | Number of logs per batch (1-1000) |
 | `batch_timeout_ms` | integer | `10000` | Batch timeout in milliseconds (1000-300000) |
 | `queue_size` | integer | `500` | Internal queue size (1-10000) |
@@ -116,22 +116,22 @@ For manual usage:
 
 ```bash
 # Start collector service (production)
-wayru-collector
+fry-collector
 
 # Start in development mode (verbose logging and statistics)
-wayru-collector --dev
+fry-collector --dev
 
 # Show help and configuration file locations
-wayru-collector --help
+fry-collector --help
 ```
 
 ## Authentication
 
-The collector authenticates with the Wayru backend using Bearer tokens obtained from the wayru-agent service via UBUS.
+The collector authenticates with the Fry backend using Bearer tokens obtained from the fry-agent service via UBUS.
 
 ### Token Retrieval Process
 
-1. **UBUS Communication**: Collector calls `wayru-agent.get_access_token` method
+1. **UBUS Communication**: Collector calls `fry-agent.get_access_token` method
 2. **Token Caching**: Valid tokens are cached locally with expiration tracking
 3. **Automatic Refresh**: Tokens are refreshed automatically before expiration
 4. **HTTP Authorization**: Cached tokens are included as `Authorization: Bearer <token>` headers
@@ -142,12 +142,12 @@ The collector authenticates with the Wayru backend using Bearer tokens obtained 
 - **Intelligent Caching**: Tokens are cached with 60-second expiration buffer
 - **Periodic Refresh**: Timer-based token validation every 5 minutes
 - **Fallback Behavior**: Continues operation without tokens in development mode
-- **Connection Recovery**: Handles wayru-agent service restarts gracefully
+- **Connection Recovery**: Handles fry-agent service restarts gracefully
 
 ### Authentication Flow
 
 ```c
-// Get token from wayru-agent
+// Get token from fry-agent
 int ret = ubus_get_access_token(token_buffer, sizeof(token_buffer));
 
 // Add Bearer token to HTTP headers
@@ -162,7 +162,7 @@ if (response_code == 401) {
 
 ### UBUS Methods Used
 
-- `wayru-agent.get_access_token`: Retrieve current access token with expiration info
+- `fry-agent.get_access_token`: Retrieve current access token with expiration info
 - Response includes: `token`, `expires_at`, `valid` fields
 
 ### Error Scenarios
@@ -195,7 +195,7 @@ Test configuration loading and validation manually:
 
 ```bash
 # Check configuration file locations
-wayru-collector --help
+fry-collector --help
 
 # Test configuration validation (shows config loading)
 cd run/collector && ./collector --dev
@@ -272,16 +272,16 @@ Logs are sent to the backend as compact JSON batches:
 3. **Pool Allocation**: Get entry from pre-allocated pool
 4. **Queue Enqueue**: Add to circular queue (lock-free)
 5. **Batch Timer**: Periodic timer checks for batch processing
-6. **Token Retrieval**: Get valid access token from wayru-agent via UBUS
+6. **Token Retrieval**: Get valid access token from fry-agent via UBUS
 7. **State Machine**: HTTP state machine processes batches with authentication
 8. **Backend Submit**: JSON payload sent with Bearer token and retry logic
 9. **Pool Return**: Entry returned to pool for reuse
 
 ## Dependencies
 
-- `wayru-core`: Console logging and utilities
-- `wayru-http`: HTTP client functionality
-- `wayru-agent`: Access token provider (via UBUS communication)
+- `fry-core`: Console logging and utilities
+- `fry-http`: HTTP client functionality
+- `fry-agent`: Access token provider (via UBUS communication)
 - `libubus`: UBUS communication and event handling
 - `libubox`: Event loop (uloop) and message handling
 - `json-c`: Compact JSON serialization
@@ -331,9 +331,9 @@ Configuration values are loaded dynamically from UCI config files and applied at
 
 ### Environment-Specific Configurations
 
-**Development Configuration** (source: `apps/collector/scripts/dev/wayru-collector.config`):
+**Development Configuration** (source: `apps/collector/scripts/dev/fry-collector.config`):
 ```bash
-config wayru_collector 'wayru_collector'
+config fry_collector 'fry_collector'
     option enabled '1'
     option logs_endpoint 'http://localhost:8080/v1/logs'
     option batch_size '5'           # Small batches for testing
@@ -343,11 +343,11 @@ config wayru_collector 'wayru_collector'
     option verbose_logging '1'
 ```
 
-**Production Configuration** (`/etc/config/wayru-collector`):
+**Production Configuration** (`/etc/config/fry-collector`):
 ```bash
-config wayru_collector 'wayru_collector'
+config fry_collector 'fry_collector'
     option enabled '1'
-    option logs_endpoint 'https://devices.wayru.tech/logs'
+    option logs_endpoint 'https://devices.fry.tech/logs'
     option batch_size '50'          # Optimized batching
     option batch_timeout_ms '10000' # Standard timeout
     option queue_size '500'         # Full queue
@@ -372,7 +372,7 @@ config wayru_collector 'wayru_collector'
 just run collector
 
 # Or run manually
-wayru-collector --dev
+fry-collector --dev
 
 # Shows detailed logs including:
 # - Configuration loading and validation
@@ -391,7 +391,7 @@ Enable configuration debugging in development mode:
 ```bash
 just run collector
 # Output includes:
-[config] Configuration loaded from: ./wayru-collector.config
+[config] Configuration loaded from: ./fry-collector.config
 [config] Current Configuration:
 [config]   enabled: true
 [config]   logs_endpoint: http://localhost:8080/v1/logs
@@ -401,7 +401,7 @@ just run collector
 [collect] Single-core collection system initialized (max_queue_size=50, max_batch_size=5)
 ```
 
-The development configuration is automatically copied from `apps/collector/scripts/dev/wayru-collector.config` to the run directory when using `just run collector`.
+The development configuration is automatically copied from `apps/collector/scripts/dev/fry-collector.config` to the run directory when using `just run collector`.
 
 ### Testing and Validation
 
@@ -434,9 +434,9 @@ The collector now uses a unified UCI-style configuration system that has been st
 ### Configuration Sources
 The configuration system has been simplified to use only these locations:
 
-1. **Production**: `/etc/config/wayru-collector` (OpenWrt standard)
-2. **Development**: Automatically copied from `apps/collector/scripts/dev/wayru-collector.config`
-3. **Fallback**: `/tmp/wayru-collector.config` (manual testing)
+1. **Production**: `/etc/config/fry-collector` (OpenWrt standard)
+2. **Development**: Automatically copied from `apps/collector/scripts/dev/fry-collector.config`
+3. **Fallback**: `/tmp/fry-collector.config` (manual testing)
 
 ### Legacy Configuration Cleanup
 - **Removed**: All references to `collector.conf` format

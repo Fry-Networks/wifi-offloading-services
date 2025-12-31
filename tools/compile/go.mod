@@ -1,4 +1,4 @@
-module github.com/Wayru-Network/wayru-os-services/tools/compile
+module github.com/Fry-Foundation/wifi-offloading-services/tools/compile
 
 go 1.24.4
 

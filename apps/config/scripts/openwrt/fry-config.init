@@ -6,12 +6,12 @@ STOP=95
 USE_PROCD=1
 
 start_service() {
-    
-    logger -t wayru-config "Starting wayru-config service"
-    
+
+    logger -t fry-config "Starting fry-config service"
+
     procd_open_instance
-    procd_set_param command /usr/bin/wayru-config
-    procd_set_param file /etc/config/wayru-config
+    procd_set_param command /usr/bin/fry-config
+    procd_set_param file /etc/config/fry-config
     procd_set_param respawn 3600 60 0
     procd_set_param term_timeout 30
     procd_set_param stdout 1
@@ -19,7 +19,7 @@ start_service() {
 }
 
 stop_service() {
-	logger -s "wayru-config stopping"
+	logger -s "fry-config stopping"
 }
 
 reload_service() {

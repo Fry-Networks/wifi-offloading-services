@@ -147,7 +147,7 @@ bool parse_uci_config(const char *config_path, Config *config) {
     }
 
     char line[512];
-    bool in_wayru_section = false;
+    bool in_fry_section = false;
 
     while (fgets(line, sizeof(line), file)) {
         char *trimmed_line = trim_whitespace(line);
@@ -158,19 +158,19 @@ bool parse_uci_config(const char *config_path, Config *config) {
         }
 
         // Check for section start
-        if (strstr(trimmed_line, "config wayru_agent") != NULL) {
-            in_wayru_section = true;
+        if (strstr(trimmed_line, "config fry_agent") != NULL) {
+            in_fry_section = true;
             continue;
         }
 
-        // Check for new section (exit wayru section)
-        if (strncmp(trimmed_line, "config ", 7) == 0 && strstr(trimmed_line, "wayru_agent") == NULL) {
-            in_wayru_section = false;
+        // Check for new section (exit fry section)
+        if (strncmp(trimmed_line, "config ", 7) == 0 && strstr(trimmed_line, "fry_agent") == NULL) {
+            in_fry_section = false;
             continue;
         }
 
-        // Parse options only if we're in the wayru section
-        if (in_wayru_section && strncmp(trimmed_line, "option ", 7) == 0) {
+        // Parse options only if we're in the fry section
+        if (in_fry_section && strncmp(trimmed_line, "option ", 7) == 0) {
             char *option_line = trimmed_line + 7; // Skip "option "
             char *space_pos = strchr(option_line, ' ');
 

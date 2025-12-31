@@ -151,7 +151,7 @@ static bool process_command_line_args(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     console_set_syslog_facility(CONSOLE_FACILITY_DAEMON);
     console_set_channels(CONSOLE_CHANNEL_SYSLOG);
-    console_set_identity("wayru-collector");
+    console_set_identity("fry-collector");
 
     int ret;
 

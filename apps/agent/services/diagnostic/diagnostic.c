@@ -8,7 +8,7 @@
  * 1. INITIALIZATION DIAGNOSTICS (comprehensive):
  *    - DNS resolution for ALL critical domains (APIs, MQTT, time sync, external)
  *    - Basic internet connectivity test
- *    - Health checks for ALL Wayru APIs (main, accounting, devices)
+ *    - Health checks for ALL Fry APIs (main, accounting, devices)
  *
  * 2. PERIODIC DIAGNOSTICS (selective for performance):
  *    - DNS check for accounting API (most critical domain)
@@ -132,16 +132,16 @@ bool internet_check(const char *host) {
     }
 }
 
-// \brief Check if the device can reach the wayru accounting API via the /health endpoint
-static bool wayru_health() {
+// \brief Check if the device can reach the fry accounting API via the /health endpoint
+static bool fry_health() {
     char url[256];
     snprintf(url, sizeof(url), "%s/health", config.accounting_api);
-    console_info(&csl, "Wayru health url %s", url);
-    HttpGetOptions get_wayru_options = {
+    console_info(&csl, "Fry health url %s", url);
+    HttpGetOptions get_fry_options = {
         .url = url,
         .bearer_token = NULL,
     };
-    HttpResult result = http_get(&get_wayru_options);
+    HttpResult result = http_get(&get_fry_options);
 
     free(result.response_buffer);
 
@@ -152,18 +152,18 @@ static bool wayru_health() {
     }
 }
 
-bool wayru_check() {
+bool fry_check() {
     RetryConfig config;
-    config.retry_func = wayru_health;
+    config.retry_func = fry_health;
     config.retry_params = NULL;
     config.attempts = 5;
     config.delay_seconds = 30;
     bool result = retry(&config);
     if (result == true) {
-        console_info(&csl, "Wayru is reachable");
+        console_info(&csl, "Fry is reachable");
         return true;
     } else {
-        console_error(&csl, "Wayru is not reachable after %d attempts ... exiting", config.attempts);
+        console_error(&csl, "Fry is not reachable after %d attempts ... exiting", config.attempts);
         return false;
     }
 }
@@ -307,14 +307,14 @@ bool comprehensive_dns_check() {
     return all_passed;
 }
 
-// Comprehensive API health check for all Wayru APIs
+// Comprehensive API health check for all Fry APIs
 bool comprehensive_api_health_check() {
     console_info(&csl, "Starting comprehensive API health checks");
 
     bool all_passed = true;
 
     // Check accounting API (existing implementation)
-    if (!wayru_check()) {
+    if (!fry_check()) {
         all_passed = false;
     }
 
@@ -457,12 +457,12 @@ void diagnostic_task(void *task_context) {
     }
 
     // Check accounting API reachability (most critical for core functionality)
-    bool wayru_status = wayru_check();
-    console_info(&csl, "Diagnostic wayru status: %s", wayru_status ? "reachable" : "unreachable");
-    if (!wayru_status) {
-        console_error(&csl, "Wayru is not reachable. Requesting exit.");
-        update_led_status(false, "Wayru check - Diagnostic task");
-        request_cleanup_and_exit("Wayru API unreachable during diagnostic task");
+    bool fry_status = fry_check();
+    console_info(&csl, "Diagnostic fry status: %s", fry_status ? "reachable" : "unreachable");
+    if (!fry_status) {
+        console_error(&csl, "Fry is not reachable. Requesting exit.");
+        update_led_status(false, "Fry check - Diagnostic task");
+        request_cleanup_and_exit("Fry API unreachable during diagnostic task");
         return;
     }
 

@@ -5,13 +5,13 @@
 #include <stdint.h>
 
 // Configuration file paths
-#define CONFIG_FILE_OPENWRT "/etc/config/wayru-collector"
-#define CONFIG_FILE_DEV "./wayru-collector.config"
-#define CONFIG_FILE_FALLBACK "/tmp/wayru-collector.config"
+#define CONFIG_FILE_OPENWRT "/etc/config/fry-collector"
+#define CONFIG_FILE_DEV "./fry-collector.config"
+#define CONFIG_FILE_FALLBACK "/tmp/fry-collector.config"
 
 // Default configuration values
 #define DEFAULT_ENABLED true
-#define DEFAULT_LOGS_ENDPOINT "https://devices.wayru.tech/logs"
+#define DEFAULT_LOGS_ENDPOINT "https://devices.fry.network/logs"
 #define DEFAULT_CONSOLE_LOG_LEVEL 1
 #define DEFAULT_BATCH_SIZE 50
 #define DEFAULT_BATCH_TIMEOUT_MS 10000

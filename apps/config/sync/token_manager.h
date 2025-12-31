@@ -8,7 +8,7 @@
 struct ConfigSyncContext;
 
 /**
- * Token Management Functions for wayru-config
+ * Token Management Functions for fry-config
  * These functions handle access token lifecycle and validation
  */
 
@@ -20,7 +20,7 @@ struct ConfigSyncContext;
 bool sync_is_token_valid(struct ConfigSyncContext *context);
 
 /**
- * Refresh access token from wayru-agent via UBUS
+ * Refresh access token from fry-agent via UBUS
  * @param context Sync context to update with new token
  * @return 0 on success, negative error code on failure
  */

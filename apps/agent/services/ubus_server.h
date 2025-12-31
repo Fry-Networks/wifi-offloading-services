@@ -9,7 +9,7 @@
 #include <stdbool.h>
 
 // UBUS service name for the agent
-#define WAYRU_AGENT_SERVICE_NAME "wayru-agent"
+#define FRY_AGENT_SERVICE_NAME "fry-agent"
 
 // UBUS method handler function type
 typedef int (*UbusMethodHandler)(struct ubus_context *ctx,

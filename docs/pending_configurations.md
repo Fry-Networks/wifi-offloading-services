@@ -1,12 +1,12 @@
-# Pending Configurations in wayru-config
+# Pending Configurations in fry-config
 
 ## WiFi HTMode Configuration
 
 ### Current Status
-wayru-config currently configures basic WiFi interface parameters (radio0 and radio1), but **does not configure channel width (HTMode)** in OpenWrt.
+fry-config currently configures basic WiFi interface parameters (radio0 and radio1), but **does not configure channel width (HTMode)** in OpenWrt.
 
 ### Identified Problem
-Different Wayru devie models have distinct radio configurations:
+Different Fry devie models have distinct radio configurations:
 
 #### **Frequency Bands per Radio:**
 - **radio0**: Can be 2.4GHz or 5GHz depending on model
@@ -96,5 +96,5 @@ function setOptimalHTMode(radio_name, config_section) {
 ```
 
 ### Compatibility Note
-This implementation must be compatible with the current hash system and selective service restart implemented in wayru-config.
+This implementation must be compatible with the current hash system and selective service restart implemented in fry-config.
 

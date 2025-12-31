@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Wayru OS Collector - Mock Backend Server
+Fry OS Collector - Mock Backend Server
 Development server for testing collector log submission functionality
 """
 
@@ -230,7 +230,7 @@ class ConfigurableHTTPServer(HTTPServer):
 def print_startup_info(host, port, config):
     """Print server startup information"""
     print("=" * 60)
-    print("Wayru OS Collector - Mock Backend Server")
+    print("Fry OS Collector - Mock Backend Server")
     print("=" * 60)
     print(f"Server URL: http://{host}:{port}")
     print(f"Logs endpoint: http://{host}:{port}/v1/logs")

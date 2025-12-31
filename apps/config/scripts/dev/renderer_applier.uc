@@ -64,24 +64,24 @@ function renderWirelessConfig(config) {
         }
     }
     printf("uci commit wireless\n");
-    printf("# WiFi reload will be handled by wayru-config main process\n");
+    printf("# WiFi reload will be handled by fry-config main process\n");
     return true;
 }
 
-function renderWayruConfig(config) {
-    let wayruArray = config.device_config?.wayru;
-    if (!wayruArray || type(wayruArray) != 'array') {
-        printf("# No Wayru configuration found\n");
+function renderFryConfig(config) {
+    let fryArray = config.device_config?.fry;
+    if (!fryArray || type(fryArray) != 'array') {
+        printf("# No Fry configuration found\n");
         return false;
     }
 
-    printf("\n# === Wayru Services Configuration ===\n");
-    for (let section in wayruArray) {
+    printf("\n# === Fry Services Configuration ===\n");
+    for (let section in fryArray) {
         let pkg = section.meta_config;
         let t = section.meta_type;
         renderSection(pkg, t, section);
         printf("uci commit %s\n", pkg);
-        printf("# %s restart will be handled by wayru-config main process\n", pkg);
+        printf("# %s restart will be handled by fry-config main process\n", pkg);
     }
     return true;
 }
@@ -100,7 +100,7 @@ function renderOpenNdsConfig(config) {
         renderSection(pkg, t, section);
     }
     printf("uci commit opennds\n");
-    printf("# OpenNDS restart will be handled by wayru-config main process\n");
+    printf("# OpenNDS restart will be handled by fry-config main process\n");
     return true;
 }
 
@@ -128,7 +128,7 @@ function main() {
     if (!config) return 1;
 
     renderWirelessConfig(config);
-    renderWayruConfig(config);
+    renderFryConfig(config);
     renderOpenNdsConfig(config);  
 
     printf("\n# === End of UCI Commands ===\n");

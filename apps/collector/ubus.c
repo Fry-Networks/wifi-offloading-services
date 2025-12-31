@@ -432,7 +432,7 @@ static void ubus_sync_response_cb(struct ubus_request *req, int type, struct blo
 }
 
 /**
- * Get access token from wayru-agent
+ * Get access token from fry-agent
  */
 int ubus_get_access_token(char *token_buf, size_t token_size, time_t *expiry) {
     uint32_t id;
@@ -450,14 +450,14 @@ int ubus_get_access_token(char *token_buf, size_t token_size, time_t *expiry) {
         return -1;
     }
 
-    // Look up wayru-agent object
-    ret = ubus_lookup_id(ctx, "wayru-agent", &id);
+    // Look up fry-agent object
+    ret = ubus_lookup_id(ctx, "fry-agent", &id);
     if (ret != 0) {
-        console_error(&csl, "Failed to find wayru-agent object: %s", ubus_strerror(ret));
+        console_error(&csl, "Failed to find fry-agent object: %s", ubus_strerror(ret));
         return -1;
     }
 
-    console_debug(&csl, "Found wayru-agent object with id: %u", id);
+    console_debug(&csl, "Found fry-agent object with id: %u", id);
 
     // Prepare request
     blob_buf_init(&b, 0);
@@ -473,7 +473,7 @@ int ubus_get_access_token(char *token_buf, size_t token_size, time_t *expiry) {
     }
 
     if (!response_data.received || !response_data.buf.head) {
-        console_error(&csl, "No response received from wayru-agent");
+        console_error(&csl, "No response received from fry-agent");
         return -1;
     }
 
@@ -520,7 +520,7 @@ int ubus_get_access_token(char *token_buf, size_t token_size, time_t *expiry) {
     uint8_t valid = blobmsg_get_u8(tb[VALID_FIELD]);
     console_debug(&csl, "Token valid field: %s", valid ? "true" : "false");
     if (!valid) {
-        console_error(&csl, "Token marked as invalid by wayru-agent");
+        console_error(&csl, "Token marked as invalid by fry-agent");
         blob_buf_free(&response_data.buf);
         return -1;
     }

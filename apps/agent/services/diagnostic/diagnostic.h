@@ -12,7 +12,7 @@ bool init_diagnostic_service(DeviceInfo *device_info);
 // Comprehensive DNS resolution check for all critical domains
 bool comprehensive_dns_check();
 
-// Comprehensive API health check for all Wayru APIs
+// Comprehensive API health check for all Fry APIs
 bool comprehensive_api_health_check();
 
 // DNS resolution check with retry logic (single host)
@@ -32,7 +32,7 @@ void update_led_status(bool ok, const char *context);
 
 // Network check functions
 bool internet_check(const char *host);
-bool wayru_check();
+bool fry_check();
 
 // Internal diagnostic task function
 void diagnostic_task(void *task_context);

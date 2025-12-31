@@ -31,9 +31,9 @@ static Console csl = {
 int main(int argc, char *argv[]) {
     console_set_syslog_facility(CONSOLE_FACILITY_DAEMON);
     console_set_channels(CONSOLE_CHANNEL_SYSLOG | CONSOLE_CHANNEL_STDIO);
-    console_set_identity("wayru-agent");
+    console_set_identity("fry-agent");
 
-    console_info(&csl, "starting wayru-agent");
+    console_info(&csl, "starting fry-agent");
 
     // Initialize scheduler (includes uloop initialization)
     scheduler_init();
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
     DeviceInfo *device_info = init_device_info();
     register_cleanup((cleanup_callback)clean_device_info, device_info);
 
-    // Diagnostic Init - runs DNS, internet, and Wayru reachability tests
+    // Diagnostic Init - runs DNS, internet, and Fry reachability tests
     bool diagnostic_status = init_diagnostic_service(device_info);
     if (!diagnostic_status) {
         update_led_status(false, "Diagnostic tests failed");
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 
     // MQTT
     MqttConfig mqtt_config = {
-        .client_id = registration->wayru_device_id,
+        .client_id = registration->fry_device_id,
         .username = access_token->token,
         .password = "any",
         .broker_url = config.mqtt_broker_url,
@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
 
     // Device status service
     DeviceStatusTaskContext *device_status_context =
-        device_status_service(device_info, registration->wayru_device_id, access_token);
+        device_status_service(device_info, registration->fry_device_id, access_token);
     if (device_status_context != NULL) {
         console_info(&csl, "Device status service started successfully");
         register_cleanup((cleanup_callback)clean_device_status_context, device_status_context);

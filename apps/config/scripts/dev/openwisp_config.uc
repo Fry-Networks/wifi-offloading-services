@@ -16,15 +16,15 @@ function log_debug(msg) {
 function main() {
     log_info('DEVELOPMENT MODE: Simulating Openwisp configuration');
     
-    // Wayru sections that would be added to unmanaged list
-    let wayru_sections = [
+    // Fry sections that would be added to unmanaged list
+    let fry_sections = [
         'opennds.opennds1',
         'wireless.captive_wifi_5ghz',
         'wireless.captive_wifi_2ghz'
     ];
     
     log_info('Would add the following sections to OpenWisp unmanaged list:');
-    for (let section in wayru_sections) {
+    for (let section in fry_sections) {
         log_debug(sprintf('  - %s', section));
     }
     

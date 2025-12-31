@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 typedef struct {
-    char *wayru_device_id;
+    char *fry_device_id;
     char *access_key;
 } Registration;
 

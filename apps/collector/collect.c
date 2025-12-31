@@ -177,7 +177,7 @@ static int init_http_client(void) {
 
     // Set up headers
     http_headers = curl_slist_append(http_headers, "Content-Type: application/json");
-    http_headers = curl_slist_append(http_headers, "User-Agent: wayru-collector/1.0");
+    http_headers = curl_slist_append(http_headers, "User-Agent: fry-collector/1.0");
 
     console_debug(&csl, "HTTP client initialized");
     return 0;

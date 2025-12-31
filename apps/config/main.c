@@ -68,13 +68,13 @@ static bool process_command_line_args(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     console_set_syslog_facility(CONSOLE_FACILITY_DAEMON);
     console_set_channels(CONSOLE_CHANNEL_SYSLOG | CONSOLE_CHANNEL_STDIO);
-    console_set_identity("wayru-config");
+    console_set_identity("fry-config");
 
     if (!process_command_line_args(argc, argv)) {
         return 0;
     }
 
-    console_info(&csl, "Starting wayru-config service");
+    console_info(&csl, "Starting fry-config service");
 
     const remote_config_t *config = config_get_current();
     if (!config) {
@@ -93,9 +93,9 @@ int main(int argc, char *argv[]) {
     }
 
     if (dev_env) {
-        console_info(&csl, "wayru-config started in DEVELOPMENT mode");
+        console_info(&csl, "fry-config started in DEVELOPMENT mode");
     } else {
-        console_info(&csl, "wayru-config service started");
+        console_info(&csl, "fry-config service started");
     }
 
     scheduler_init();

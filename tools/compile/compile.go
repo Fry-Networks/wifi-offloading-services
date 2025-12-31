@@ -118,7 +118,7 @@ func main() {
 	// Clean up and set up directories
 	fmt.Println("Cleaning and setting up directories")
 	os.RemoveAll(feedDir)
-	os.MkdirAll(filepath.Join(feedDir, "admin", "wayru-os-services"), 0755)
+	os.MkdirAll(filepath.Join(feedDir, "admin", "fry-os-services"), 0755)
 	archDir := fmt.Sprintf("%s_%s", selectedBuild.Architecture, selectedBuild.Subtarget)
 	archOutputDir := filepath.Join(outputDir, archDir)
 	os.RemoveAll(archOutputDir)
@@ -126,11 +126,11 @@ func main() {
 
 	// Copy source files into feed
 	fmt.Println("Copying build source to feed directory")
-	copyFile(filepath.Join(projectRoot, "Makefile"), filepath.Join(feedDir, "admin", "wayru-os-services", "Makefile"))
-	copyFile(filepath.Join(projectRoot, "CMakeLists.txt"), filepath.Join(feedDir, "admin", "wayru-os-services", "CMakeLists.txt"))
-	copyFile(filepath.Join(projectRoot, "VERSION"), filepath.Join(feedDir, "admin", "wayru-os-services", "VERSION"))
-	copyDir(filepath.Join(projectRoot, "apps"), filepath.Join(feedDir, "admin", "wayru-os-services", "apps"))
-	copyDir(filepath.Join(projectRoot, "lib"), filepath.Join(feedDir, "admin", "wayru-os-services", "lib"))
+	copyFile(filepath.Join(projectRoot, "Makefile"), filepath.Join(feedDir, "admin", "fry-os-services", "Makefile"))
+	copyFile(filepath.Join(projectRoot, "CMakeLists.txt"), filepath.Join(feedDir, "admin", "fry-os-services", "CMakeLists.txt"))
+	copyFile(filepath.Join(projectRoot, "VERSION"), filepath.Join(feedDir, "admin", "fry-os-services", "VERSION"))
+	copyDir(filepath.Join(projectRoot, "apps"), filepath.Join(feedDir, "admin", "fry-os-services", "apps"))
+	copyDir(filepath.Join(projectRoot, "lib"), filepath.Join(feedDir, "admin", "fry-os-services", "lib"))
 
 	// Prepare SDK paths
 	var muslSuffix string
@@ -208,7 +208,7 @@ func main() {
 		fmt.Println("SDK already extracted and ready to use.")
 	}
 
-	imageName := "wayru-package-builder:latest"
+	imageName := "fry-package-builder:latest"
 
 	exists, err := checkDockerImageExists(imageName)
 	if err != nil {
@@ -221,7 +221,7 @@ func main() {
 		fmt.Printf("Docker image %s not found. Building it now...\n", imageName)
 		err = buildDockerImageFromDir(
 			"Dockerfile.build",
-			"wayru-package-builder:latest",
+			"fry-package-builder:latest",
 			projectRoot,
 		)
 		if err != nil {
@@ -385,23 +385,23 @@ func runDockerContainerFromImage(
 			sed -i '/telephony/d' feeds.conf
 			sed -i '/routing/d' feeds.conf
 			./scripts/feeds update -a
-			./scripts/feeds install wayru-os-services
+			./scripts/feeds install fry-os-services
 			rm -f .config
 			touch .config
 			echo "# CONFIG_ALL_NONSHARED is not set" >> .config
 			echo "# CONFIG_ALL_KMODS is not set" >> .config
 			echo "# CONFIG_ALL is not set" >> .config
-			echo "CONFIG_PACKAGE_wayru-os-services=y" >> .config
+			echo "CONFIG_PACKAGE_fry-os-services=y" >> .config
 			make%[2]s defconfig
-			make%[2]s package/wayru-os-services/download
-			make%[2]s package/wayru-os-services/prepare
-			make%[2]s package/wayru-os-services/compile
+			make%[2]s package/fry-os-services/download
+			make%[2]s package/fry-os-services/prepare
+			make%[2]s package/fry-os-services/compile
 
 			echo "Moving compiled package to /output"
 			mkdir -p /output
-			find bin/packages -type f -name 'wayru-os-services_*.ipk' -exec cp {} /output/ \;
+			find bin/packages -type f -name 'fry-os-services_*.ipk' -exec cp {} /output/ \;
 
-			make%[2]s package/wayru-os-services/clean
+			make%[2]s package/fry-os-services/clean
 		`, feedsName, makeOpts)},
 		Tty: true,
 	}

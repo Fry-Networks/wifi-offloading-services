@@ -265,7 +265,7 @@ void handle_download_result(AccessToken *access_token, int upgrade_attempt_id, b
 
 void send_firmware_check_request(const char *codename,
                                  const char *version,
-                                 const char *wayru_device_id,
+                                 const char *fry_device_id,
                                  AccessToken *access_token) {
 
     if (config.firmware_update_enabled == 0) {
@@ -284,7 +284,7 @@ void send_firmware_check_request(const char *codename,
     json_object *json_body = json_object_new_object();
     json_object_object_add(json_body, "codename", json_object_new_string(codename));
     json_object_object_add(json_body, "version", json_object_new_string(version));
-    json_object_object_add(json_body, "wayru_device_id", json_object_new_string(wayru_device_id));
+    json_object_object_add(json_body, "fry_device_id", json_object_new_string(fry_device_id));
     const char *body = json_object_to_json_string(json_body);
 
     console_debug(&csl, "check firmware update body: %s", body);
@@ -397,7 +397,7 @@ void firmware_upgrade_task(void *task_context) {
     FirmwareUpgradeTaskContext *context = (FirmwareUpgradeTaskContext *)task_context;
     console_debug(&csl, "firmware upgrade task");
     send_firmware_check_request(context->device_info->name, context->device_info->os_version,
-                                context->registration->wayru_device_id, context->access_token);
+                                context->registration->fry_device_id, context->access_token);
     // No manual rescheduling needed - repeating tasks auto-reschedule
 }
 
@@ -461,8 +461,8 @@ void firmware_upgrade_on_boot(Registration *registration, DeviceInfo *device_inf
     snprintf(verify_status_url, sizeof(verify_status_url), "%s%s", config.accounting_api, VERIFY_STATUS_ENDPOINT);
     // snprintf(verify_status_url, sizeof(verify_status_url), "%s%s", "http://localhost:4050", VERIFY_STATUS_ENDPOINT);
 
-    if (registration == NULL || registration->wayru_device_id == NULL) {
-        console_error(&csl, "registration or wayru_device_id is NULL");
+    if (registration == NULL || registration->fry_device_id == NULL) {
+        console_error(&csl, "registration or fry_device_id is NULL");
         return;
     }
 
@@ -472,7 +472,7 @@ void firmware_upgrade_on_boot(Registration *registration, DeviceInfo *device_inf
     }
 
     json_object *json_body = json_object_new_object();
-    json_object_object_add(json_body, "wayru_device_id", json_object_new_string(registration->wayru_device_id));
+    json_object_object_add(json_body, "fry_device_id", json_object_new_string(registration->fry_device_id));
     json_object_object_add(json_body, "os_version", json_object_new_string(device_info->os_version));
     const char *body = json_object_to_json_string(json_body);
 

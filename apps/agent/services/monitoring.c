@@ -85,7 +85,7 @@ json_object *createjson(DeviceData *device_data,
     json_object_object_add(jobj, "os_services_version", json_object_new_string(os_services_version));
     json_object_object_add(jobj, "public_ip", json_object_new_string(public_ip));
     json_object_object_add(jobj, "measurement_id", json_object_new_string(measurementid));
-    json_object_object_add(jobj, "device_id", json_object_new_string(registration->wayru_device_id));
+    json_object_object_add(jobj, "device_id", json_object_new_string(registration->fry_device_id));
     json_object_object_add(jobj, "timestamp", json_object_new_int(timestamp));
     json_object_object_add(jobj, "wifi_clients", json_object_new_int(device_data->wifi_clients));
     json_object_object_add(jobj, "memory_total", json_object_new_int64(device_data->memory_total));
@@ -128,7 +128,7 @@ void monitoring_task(void *task_context) {
 
     json_object *json_device_data = json_object_new_object();
     char measurementid[256];
-    generate_id(measurementid, sizeof(measurementid), context->registration->wayru_device_id, now);
+    generate_id(measurementid, sizeof(measurementid), context->registration->fry_device_id, now);
     console_debug(&csl, "measurement ID for deviceData: %s", measurementid);
     createjson(&device_data, json_device_data, now, context->registration, measurementid, context->os_name,
                context->os_version, context->os_services_version, context->public_ip);

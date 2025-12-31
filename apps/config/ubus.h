@@ -7,11 +7,11 @@
 
 /**
  * UBUS Token Management Functions
- * These functions handle communication with wayru-agent for access tokens
+ * These functions handle communication with fry-agent for access tokens
  */
 
 /**
- * Get access token from wayru-agent via UBUS (synchronous)
+ * Get access token from fry-agent via UBUS (synchronous)
  * @param token_buf Buffer to store the token (should be at least 256 bytes)
  * @param token_size Size of the token buffer  
  * @param expiry Pointer to store token expiry time
@@ -21,12 +21,12 @@ int ubus_get_access_token_sync(char *token_buf, size_t token_size, time_t *expir
 
 /**
  * Check if UBUS is available for token requests
- * @return true if UBUS can be used and wayru-agent is available, false otherwise
+ * @return true if UBUS can be used and fry-agent is available, false otherwise
  */
 bool ubus_is_available_for_tokens(void);
 
 /**
- * Get device information from wayru-agent via UBUS (synchronous)
+ * Get device information from fry-agent via UBUS (synchronous)
  * @param name_buf Buffer to store device name (codename)
  * @param name_size Size of name buffer
  * @param model_buf Buffer to store device model

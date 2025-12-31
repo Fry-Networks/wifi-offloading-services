@@ -177,7 +177,7 @@ char *request_access_token(Registration *registration) {
 
     // Convert registration to json
     json_object *json_body = json_object_new_object();
-    json_object_object_add(json_body, "wayru_device_id", json_object_new_string(registration->wayru_device_id));
+    json_object_object_add(json_body, "fry_device_id", json_object_new_string(registration->fry_device_id));
     json_object_object_add(json_body, "access_key", json_object_new_string(registration->access_key));
     const char *body_json_str = json_object_to_json_string(json_body);
     console_debug(&csl, "access request body is %s", body_json_str);

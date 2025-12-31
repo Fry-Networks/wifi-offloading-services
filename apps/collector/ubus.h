@@ -30,7 +30,7 @@ void ubus_cleanup(void);
 bool ubus_is_connected(void);
 
 /**
- * Retrieve access token from wayru-agent via UBUS
+ * Retrieve access token from fry-agent via UBUS
  * @param token_buf Buffer to store the token (should be at least 256 bytes)
  * @param token_size Size of the token buffer
  * @param expiry Pointer to store token expiry time
@@ -45,7 +45,7 @@ int ubus_get_access_token(char *token_buf, size_t token_size, time_t *expiry);
 bool ubus_is_access_token_valid(void);
 
 /**
- * Force refresh of the cached access token from wayru-agent
+ * Force refresh of the cached access token from fry-agent
  * @return 0 on success, negative error code on failure
  */
 int ubus_refresh_access_token(void);

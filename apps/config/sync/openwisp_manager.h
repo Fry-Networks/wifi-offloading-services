@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 /**
- * Configure OpenWisp to ignore wayru-managed sections
+ * Configure OpenWisp to ignore fry-managed sections
  * Returns 0 on success, -1 on error
  */
 int configure_openwisp_exclusions(bool dev_mode);

@@ -217,14 +217,14 @@ int config_load_from_file(collector_config_t *config, const char *file_path) {
         }
 
         // Check for section header
-        if (strncmp(line, "config wayru_collector", 22) == 0) {
+        if (strncmp(line, "config fry_collector", 22) == 0) {
             in_collector_section = true;
-            console_debug(&csl, "Found wayru_collector section at line %d", line_number);
+            console_debug(&csl, "Found fry_collector section at line %d", line_number);
             continue;
         }
 
         // Check for new section (end of our section)
-        if (strncmp(line, "config ", 7) == 0 && strncmp(line, "config wayru_collector", 22) != 0) {
+        if (strncmp(line, "config ", 7) == 0 && strncmp(line, "config fry_collector", 22) != 0) {
             in_collector_section = false;
             continue;
         }

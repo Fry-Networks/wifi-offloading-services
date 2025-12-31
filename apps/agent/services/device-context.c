@@ -19,7 +19,7 @@ static Console csl = {
 
 char *request_device_context(Registration *registration, AccessToken *access_token) {
     char url[256];
-    snprintf(url, sizeof(url), "%s/%s/%s/%s", config.accounting_api, DEVICE_ENDPOINT, registration->wayru_device_id,
+    snprintf(url, sizeof(url), "%s/%s/%s/%s", config.accounting_api, DEVICE_ENDPOINT, registration->fry_device_id,
              DEVICE_CONTEXT_ENDPOINT);
 
     // print token

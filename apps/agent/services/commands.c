@@ -12,7 +12,7 @@
 typedef struct {
     const char *codename;
     const char *version;
-    const char *wayru_device_id;
+    const char *fry_device_id;
     AccessToken *access_token;
 } FirmwareUpdateCommandContext;
 
@@ -72,7 +72,7 @@ void commands_callback(struct mosquitto *mosq, const struct mosquitto_message *m
     if (strcmp(command_str, "check_firmware_update") == 0) {
         console_info(&csl, "Received firmware update command");
         send_firmware_check_request(firmware_update_command_context.codename, firmware_update_command_context.version,
-                                    firmware_update_command_context.wayru_device_id,
+                                    firmware_update_command_context.fry_device_id,
                                     firmware_update_command_context.access_token);
     } else {
         // Make sure both response_topic and command_id are present in the payload to continue with custom commands
@@ -120,7 +120,7 @@ void commands_callback(struct mosquitto *mosq, const struct mosquitto_message *m
 }
 
 // Subscribe to the commands topic.
-// The device will subscribe to "device/<wayru_device_id>/command" to receive commands.
+// The device will subscribe to "device/<fry_device_id>/command" to receive commands.
 void commands_service(struct mosquitto *mosq,
                       DeviceInfo *device_info,
                       Registration *registration,
@@ -128,11 +128,11 @@ void commands_service(struct mosquitto *mosq,
     // Init firmware update command context
     firmware_update_command_context.codename = device_info->name;
     firmware_update_command_context.version = device_info->os_version;
-    firmware_update_command_context.wayru_device_id = registration->wayru_device_id;
+    firmware_update_command_context.fry_device_id = registration->fry_device_id;
     firmware_update_command_context.access_token = access_token;
 
     // Subscribe to the commands topic
     char commands_topic[256];
-    snprintf(commands_topic, sizeof(commands_topic), "device/%s/command", registration->wayru_device_id);
+    snprintf(commands_topic, sizeof(commands_topic), "device/%s/command", registration->fry_device_id);
     subscribe_mqtt(mosq, commands_topic, 1, commands_callback);
 }

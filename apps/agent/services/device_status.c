@@ -44,7 +44,7 @@ DeviceStatus request_device_status(void *task_context) {
     json_object_object_add(json_body, "os_services_version",
                            json_object_new_string(context->device_info->os_services_version));
     json_object_object_add(json_body, "did_public_key", json_object_new_string(context->device_info->did_public_key));
-    json_object_object_add(json_body, "wayru_device_id", json_object_new_string(context->wayru_device_id));
+    json_object_object_add(json_body, "fry_device_id", json_object_new_string(context->fry_device_id));
     const char *body = json_object_to_json_string(json_body);
 
     console_debug(&csl, "device status request body %s", body);
@@ -109,14 +109,14 @@ void device_status_task(void *task_context) {
 }
 
 DeviceStatusTaskContext *
-device_status_service(DeviceInfo *device_info, char *wayru_device_id, AccessToken *access_token) {
+device_status_service(DeviceInfo *device_info, char *fry_device_id, AccessToken *access_token) {
     DeviceStatusTaskContext *context = (DeviceStatusTaskContext *)malloc(sizeof(DeviceStatusTaskContext));
     if (context == NULL) {
         console_error(&csl, "failed to allocate memory for device status task context");
         return NULL;
     }
 
-    context->wayru_device_id = wayru_device_id;
+    context->fry_device_id = fry_device_id;
     context->device_info = device_info;
     context->access_token = access_token;
     context->task_id = 0;
@@ -139,10 +139,10 @@ device_status_service(DeviceInfo *device_info, char *wayru_device_id, AccessToke
     console_debug(&csl, "Successfully scheduled device status task with ID %u", context->task_id);
 
     // Side effects
-    // Make sure wayru operator is running (all status codes but 6)
+    // Make sure fry operator is running (all status codes but 6)
     // Start the peaq did service (on status 5)
     // Check that the captive portal is running (on status 6)
-    // Disable wayru operator network (on status 6)
+    // Disable fry operator network (on status 6)
 
     return context;
 }

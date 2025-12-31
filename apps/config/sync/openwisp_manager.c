@@ -10,12 +10,12 @@ static Console csl = {.topic = "openwisp-mgr"};
 
 // Script paths
 #define DEV_OPENWISP_SCRIPT "./scripts/openwisp_config.uc"
-#define PROD_OPENWISP_SCRIPT "/etc/wayru-config/scripts/openwisp_config.uc"
+#define PROD_OPENWISP_SCRIPT "/etc/fry-config/scripts/openwisp_config.uc"
 
 #define DEV_UCODE_PATH "/usr/local/bin/ucode"
 #define PROD_UCODE_PATH "/usr/bin/ucode"
 
-// Parse and forward script logs to wayru-config console
+// Parse and forward script logs to fry-config console
 static void parse_and_log_script_output(const char *line) {
     if (!line || strlen(line) == 0) return;
 
@@ -109,9 +109,9 @@ static int execute_openwisp_script(bool dev_mode) {
     return script_exit_code;
 }
 
-// Configure Openwisp to ignore wayru-managed sections
+// Configure Openwisp to ignore fry-managed sections
 int configure_openwisp_exclusions(bool dev_mode) {
-    console_info(&csl, "Configuring Openwisp exclusions for wayru-managed sections...");
+    console_info(&csl, "Configuring Openwisp exclusions for fry-managed sections...");
 
     int result = execute_openwisp_script(dev_mode);
     

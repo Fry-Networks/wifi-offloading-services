@@ -48,8 +48,8 @@ int init_nds_fifo() {
     char fifo_dir[256];
     char fifo_file[256];
 
-    snprintf(fifo_dir, sizeof(fifo_dir), "/tmp/wayru-os-services");
-    snprintf(fifo_file, sizeof(fifo_file), "%s/%s", "/tmp/wayru-os-services", NDS_FIFO);
+    snprintf(fifo_dir, sizeof(fifo_dir), "/tmp/fry-os-services");
+    snprintf(fifo_file, sizeof(fifo_file), "%s/%s", "/tmp/fry-os-services", NDS_FIFO);
 
     // Check if directory exists
     if (stat(fifo_dir, &st) == -1) {
@@ -261,7 +261,7 @@ void clean_nds_fifo(int *nds_fifo_fd) {
 
     // Build the FIFO file path and unlink it
     char fifo_path[256];
-    if (snprintf(fifo_path, sizeof(fifo_path), "%s/wayru-os-services/%s", config.temp_path, NDS_FIFO) >=
+    if (snprintf(fifo_path, sizeof(fifo_path), "%s/fry-os-services/%s", config.temp_path, NDS_FIFO) >=
         (int)sizeof(fifo_path)) {
         console_error(&csl, "nds fifo file path exceeds buffer size");
         return;

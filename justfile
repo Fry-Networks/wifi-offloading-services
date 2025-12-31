@@ -11,9 +11,9 @@ build:
 # Available apps: agent, config, collector
 run app="agent":
     just build
-    @if [ ! -f "build/wayru-{{app}}" ]; then echo "Error: App 'wayru-{{app}}' not found in build directory."; exit 1; fi
-    mkdir -p run/wayru-{{app}}
-    cp build/wayru-{{app}} run/wayru-{{app}}/wayru-{{app}}
+    @if [ ! -f "build/fry-{{app}}" ]; then echo "Error: App 'fry-{{app}}' not found in build directory."; exit 1; fi
+    mkdir -p run/fry-{{app}}
+    cp build/fry-{{app}} run/fry-{{app}}/fry-{{app}}
     bash tools/run.sh {{app}}
 
 # Generate compilation database (compile_commands.json)

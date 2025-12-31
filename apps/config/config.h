@@ -4,11 +4,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define CONFIG_FILE_OPENWRT "/etc/config/wayru-config"
-#define CONFIG_FILE_DEV "./scripts/wayru-config.config"
+#define CONFIG_FILE_OPENWRT "/etc/config/fry-config"
+#define CONFIG_FILE_DEV "./scripts/fry-config.config"
 
-#define CONFIG_FILE_FALLBACK "/tmp/wayru-config.config"
-#define DEFAULT_CONFIG_ENDPOINT "https://devices.wayru.tech/device_config"
+#define CONFIG_FILE_FALLBACK "/tmp/fry-config.config"
+#define DEFAULT_CONFIG_ENDPOINT "https://devices.fry.network/device_config"
 
 #define DEFAULT_ENABLED true
 #define DEFAULT_CONSOLE_LOG_LEVEL 7

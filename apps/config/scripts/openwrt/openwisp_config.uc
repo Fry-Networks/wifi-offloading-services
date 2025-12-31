@@ -86,8 +86,8 @@ function main() {
         return 0;
     }
 
-    // Wayru sections that should be unmanaged
-    let wayru_sections = [
+    // Fry sections that should be unmanaged
+    let fry_sections = [
         'opennds.opennds1',              
         'wireless.captive_wifi_5ghz',    
         'wireless.captive_wifi_2ghz'     
@@ -98,7 +98,7 @@ function main() {
     log_debug(sprintf('Current unmanaged list has %d items', length(current_unmanaged)));
 
     // Create merged array without duplicates
-    let new_unmanaged = merge_arrays(current_unmanaged, wayru_sections);
+    let new_unmanaged = merge_arrays(current_unmanaged, fry_sections);
     
     // Check if changes are needed
     let changes_made = (length(new_unmanaged) != length(current_unmanaged));
@@ -141,7 +141,7 @@ function main() {
         }
     } else {
         log_info('No Openwisp configuration changes needed');
-        log_debug('All wayru sections already in unmanaged list');
+        log_debug('All fry sections already in unmanaged list');
         return 0; // No changes
     }
 }

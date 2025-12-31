@@ -39,7 +39,7 @@ int sync_refresh_access_token(struct ConfigSyncContext *context) {
 
     // Check if UBUS is available for token requests
     if (!ubus_is_available_for_tokens()) {
-        console_debug(&csl, "UBUS not available for token requests (wayru-agent not ready)");
+        console_debug(&csl, "UBUS not available for token requests (fry-agent not ready)");
         return -1; 
     }
 

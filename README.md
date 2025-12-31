@@ -1,8 +1,9 @@
-# wayru-os-services
-Set of services for OpenWrt-based firmware.
+# fry-os-services
+Set of services for OpenWrt-based firmware for Fry Networks WiFi offloading.
+
 ![Services diagram](./docs/firmware_services_diagram.png)
 
-**wayru-agent**
+**fry-agent**
 - registration
 - access token
 - mqtt
@@ -10,11 +11,17 @@ Set of services for OpenWrt-based firmware.
 - updates
 - misc
 
-**wayru-collector**
+**fry-collector**
 - log collection
 
-**wayru-config**
+**fry-config**
 - config sync
+
+## Overview
+
+This repository is part of the Fry Networks DePIN (Decentralized Physical Infrastructure Network) ecosystem. It provides WiFi offloading services that enable partnerships with LTE providers (like T-Mobile) for seamless connectivity handoffs between cellular and WiFi networks.
+
+This service works in conjunction with [wifi-offloading](https://github.com/Fry-Foundation/wifi-offloading) for the complete WiFi offloading solution.
 
 ## Dependencies
 ### Build
@@ -80,7 +87,7 @@ This can help if your IDE is not recognizing the include paths correctly and is 
 
 ## Contributing
 
-This project is now open source. Contributions are welcome! Please follow these guidelines:
+This project is open source. Contributions are welcome! Please follow these guidelines:
 
 1. Fork the repository
 2. Create a feature branch
@@ -94,15 +101,8 @@ This project is licensed under the MIT License.
 
 ## Support
 
-**Important**: This project is now open source and maintained by the community. WAYRU no longer exists and will not provide support for this repository. For issues, questions, or contributions, please use the GitHub Issues section.
-
-💙 **Farewell Message**
-With gratitude and love, we say goodbye.
-WAYRU is closing its doors, but we are leaving these repositories open and free for the community.
-May they continue to inspire builders, dreamers, and innovators.
-
-With love, WAYRU
+For issues, questions, or contributions, please use the GitHub Issues section.
 
 ---
 
-**Note**: This project is **open source**. Wayru, Inc and The Wayru Foundation are no longer operating entities, and will not provide any kind of support. The community is welcome to use, modify, and improve this codebase.
+**Note**: This project is maintained by Fry Networks and The Fry Foundation. The community is welcome to use, modify, and improve this codebase.

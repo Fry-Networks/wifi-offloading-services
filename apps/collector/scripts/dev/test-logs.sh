@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Wayru OS Collector - Development Log Test Script
+# Fry OS Collector - Development Log Test Script
 # This script generates test syslog messages to verify collector functionality
 
 set -e

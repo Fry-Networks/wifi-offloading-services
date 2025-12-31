@@ -206,7 +206,7 @@ bool attempt_generate_and_sign_radsec(AccessToken *access_token, Registration *r
 }
 
 // This function restarts radsecproxy; configuration is not distributed here, but through openwisp
-// @todo: distribute radsecproxy and configuration through wayru-os-services
+// @todo: distribute radsecproxy and configuration through fry-os-services
 // @todo: check if radsecproxy is installed with opkg
 void install_radsec_cert() {
     if (config.dev_env) {

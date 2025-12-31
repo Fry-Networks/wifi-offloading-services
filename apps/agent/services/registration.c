@@ -65,7 +65,7 @@ char *read_device_registration() {
 
 Registration *parse_device_registration(const char *device_registration_json) {
     struct json_object *parsed_registration;
-    struct json_object *wayru_device_id;
+    struct json_object *fry_device_id;
     struct json_object *access_key;
 
     parsed_registration = json_tokener_parse(device_registration_json);
@@ -75,8 +75,8 @@ Registration *parse_device_registration(const char *device_registration_json) {
         return NULL;
     }
 
-    if (!json_object_object_get_ex(parsed_registration, "wayru_device_id", &wayru_device_id)) {
-        console_error(&csl, "failed to get wayru_device_id from device registration");
+    if (!json_object_object_get_ex(parsed_registration, "fry_device_id", &fry_device_id)) {
+        console_error(&csl, "failed to get fry_device_id from device registration");
         json_object_put(parsed_registration);
         return NULL;
     }
@@ -94,7 +94,7 @@ Registration *parse_device_registration(const char *device_registration_json) {
         return NULL;
     }
 
-    registration->wayru_device_id = strdup(json_object_get_string(wayru_device_id));
+    registration->fry_device_id = strdup(json_object_get_string(fry_device_id));
     registration->access_key = strdup(json_object_get_string(access_key));
     json_object_put(parsed_registration);
     return registration;
@@ -109,7 +109,7 @@ Registration *init_registration(char *mac, char *model, char *brand, char *openw
     if (registration_str != NULL) {
         registration = parse_device_registration(registration_str);
         free(registration_str);
-        if (registration->wayru_device_id != NULL && registration->access_key != NULL) {
+        if (registration->fry_device_id != NULL && registration->access_key != NULL) {
             return registration;
         }
     }
@@ -154,7 +154,7 @@ Registration *init_registration(char *mac, char *model, char *brand, char *openw
 
     // Parse response
     registration = parse_device_registration(result.response_buffer);
-    if (registration->wayru_device_id == NULL || registration->access_key == NULL) {
+    if (registration->fry_device_id == NULL || registration->access_key == NULL) {
         console_error(&csl, "failed to register device, no device id or access key received");
         free(result.response_buffer);
         return false;
@@ -176,9 +176,9 @@ void clean_registration(Registration *registration) {
         return;
     }
 
-    if (registration->wayru_device_id != NULL) {
-        free(registration->wayru_device_id);
-        registration->wayru_device_id = NULL;
+    if (registration->fry_device_id != NULL) {
+        free(registration->fry_device_id);
+        registration->fry_device_id = NULL;
     }
 
     if (registration->access_key != NULL) {

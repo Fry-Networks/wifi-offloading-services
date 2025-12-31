@@ -126,12 +126,12 @@ int config_load_from_file(remote_config_t *config, const char *file_path) {
         trim_whitespace(line);
         if (line[0] == '\0' || line[0] == '#') continue;
 
-        if (strncmp(line, "config wayru_config", 19) == 0) {
+        if (strncmp(line, "config fry_config", 19) == 0) {
             in_section = true;
             continue;
         }
 
-        if (strncmp(line, "config ", 7) == 0 && strncmp(line, "config wayru_config", 19) != 0) {
+        if (strncmp(line, "config ", 7) == 0 && strncmp(line, "config fry_config", 19) != 0) {
             in_section = false;
             continue;
         }

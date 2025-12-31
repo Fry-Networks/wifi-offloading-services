@@ -12,10 +12,10 @@
 #include <unistd.h>
 
 #define OS_VERSION_FILE "/etc/openwrt_release"
-#define PACKAGE_VERSION_FILE "/etc/wayru-os-services/VERSION"
+#define PACKAGE_VERSION_FILE "/etc/fry-os-services/VERSION"
 #define ID_LENGTH 37
 #define MAX_RETRIES 50
-#define DEVICE_PROFILE_FILE "/etc/wayru-os/device.json"
+#define DEVICE_PROFILE_FILE "/etc/fry-os/device.json"
 
 static Console csl = {
     .topic = "device-info",
@@ -116,9 +116,9 @@ char *get_mac_for_model(const char *device_name) {
     
     // Set environment variable for the script (using device name)
     if (device_name) {
-        setenv("WAYRU_MODEL", device_name, 1);
+        setenv("FRY_MODEL", device_name, 1);
     } else {
-        setenv("WAYRU_MODEL", "unknown", 1);
+        setenv("FRY_MODEL", "unknown", 1);
     }
     
     console_info(&csl, "Getting MAC address for device: %s", device_name ? device_name : "unknown");
@@ -138,7 +138,7 @@ DeviceProfile get_device_profile() {
 
     if (config.dev_env) {
         device_profile.name = strdup("Hemera");
-        device_profile.brand = strdup("Wayru");
+        device_profile.brand = strdup("Fry");
         device_profile.model = strdup("Genesis");
         return device_profile;
     }

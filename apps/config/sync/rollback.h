@@ -9,9 +9,9 @@
 // Service restart tracking
 typedef struct {
     bool wireless;
-    bool wayru_agent;
-    bool wayru_collector;
-    bool wayru_config;
+    bool fry_agent;
+    bool fry_collector;
+    bool fry_config;
     bool opennds;
 } ServiceRestartNeeds;
 

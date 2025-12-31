@@ -1,7 +1,7 @@
 # OpenWrt SDK build targets.
 # The SDK is looked up using `target` and `subtarget`.
 # `architecture` is added to package build metadata as it's needed for package releases.
-# `codenames` represent Wayru compatibility. These are added for documentation purposes.
+# `codenames` represent Fry device compatibility. These are added for documentation purposes.
 
 [[builds]]
 target = "ath79"
@@ -19,7 +19,7 @@ codenames = [
     "deimos",
 ]
 version = "23.05.5"
-feedsName = "wayru_custom"
+feedsName = "fry_custom"
 
 [[builds]]
 target = "ramips"
@@ -27,7 +27,7 @@ subtarget = "mt7621"
 architecture = "mipsel_24kc"
 codenames = ["aria", "apollo", "chronos"]
 version = "23.05.5"
-feedsName = "wayru_custom"
+feedsName = "fry_custom"
 
 [[builds]]
 target = "ipq40xx"
@@ -35,7 +35,7 @@ subtarget = "mikrotik"
 architecture = "arm_cortex-a7_neon-vfpv4"
 codenames = ["loki", "gaia", "helios"]
 version = "23.05.5"
-feedsName = "wayru_custom"
+feedsName = "fry_custom"
 
 [[builds]]
 target = "mediatek"
@@ -43,7 +43,7 @@ subtarget = "mt7622"
 architecture = "aarch64_cortex-a53"
 codenames = ["neron"]
 version = "23.05.5"
-feedsName = "wayru_custom"
+feedsName = "fry_custom"
 
 [[builds]]
 target = "mediatek"
@@ -51,4 +51,4 @@ subtarget = "filogic"
 architecture = "aarch64_cortex-a53"
 codenames = ["apocalypse", "prometheus", "eclypse"]
 version = "23.05.5"
-feedsName = "wayru_custom"
+feedsName = "fry_custom"

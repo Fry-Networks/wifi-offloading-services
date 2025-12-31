@@ -19,7 +19,7 @@ firmware_upgrade_check(DeviceInfo *device_info, Registration *registration, Acce
 void clean_firmware_upgrade_context(FirmwareUpgradeTaskContext *context);
 void send_firmware_check_request(const char *codename,
                                  const char *version,
-                                 const char *wayru_device_id,
+                                 const char *fry_device_id,
                                  AccessToken *access_token);
 void clean_firmware_upgrade_service();
 

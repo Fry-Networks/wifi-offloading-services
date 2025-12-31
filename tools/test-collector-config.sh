@@ -53,7 +53,7 @@ cleanup() {
 trap cleanup EXIT
 
 main() {
-    echo -e "${BLUE}Wayru Collector Configuration Test Suite${NC}"
+    echo -e "${BLUE}Fry Collector Configuration Test Suite${NC}"
     echo "========================================"
     echo "Project root: $PROJECT_ROOT"
     echo ""
@@ -71,16 +71,16 @@ main() {
 
     # Test 2: Executable creation
     test_header "Executable Creation Test"
-    if [ -f "build/wayru-collector" ]; then
-        log_success "wayru-collector executable created"
+    if [ -f "build/fry-collector" ]; then
+        log_success "fry-collector executable created"
     else
-        log_error "wayru-collector executable not found in build directory"
+        log_error "fry-collector executable not found in build directory"
         exit 1
     fi
 
     # Test 3: Configuration file existence
     test_header "Configuration File Test"
-    if [ -f "apps/collector/scripts/dev/wayru-collector.config" ]; then
+    if [ -f "apps/collector/scripts/dev/fry-collector.config" ]; then
         log_success "Development configuration file exists"
     else
         log_error "Development configuration file not found"
@@ -89,8 +89,8 @@ main() {
 
     # Test 4: Configuration file format validation
     test_header "Configuration Format Validation"
-    config_file="apps/collector/scripts/dev/wayru-collector.config"
-    if grep -q "config wayru_collector 'wayru_collector'" "$config_file" && \
+    config_file="apps/collector/scripts/dev/fry-collector.config"
+    if grep -q "config fry_collector 'fry_collector'" "$config_file" && \
        grep -q "option enabled" "$config_file" && \
        grep -q "option logs_endpoint" "$config_file"; then
         log_success "Configuration file has correct UCI format"
@@ -130,7 +130,7 @@ main() {
 
     files_to_check=(
         "run/collector/collector"
-        "run/collector/wayru-collector.config"
+        "run/collector/fry-collector.config"
         "run/collector/scripts/test-logs.sh"
         "run/collector/scripts/mock-backend.py"
     )
@@ -154,7 +154,7 @@ main() {
 
     # Test 7: Configuration content verification
     test_header "Configuration Content Verification"
-    run_config="run/collector/wayru-collector.config"
+    run_config="run/collector/fry-collector.config"
 
     if [ -f "$run_config" ]; then
         # Check for development-specific settings
@@ -253,7 +253,7 @@ main() {
 
 # Show usage if help requested
 if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-    echo "Wayru Collector Configuration Test Suite"
+    echo "Fry Collector Configuration Test Suite"
     echo ""
     echo "Usage: $0"
     echo ""

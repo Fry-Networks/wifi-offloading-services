@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Get model from environment variable
-MODEL="${WAYRU_MODEL:-unknown}"
+MODEL="${FRY_MODEL:-unknown}"
 
 # Function to get MAC from a specific interface path
 get_mac_from_path() {
