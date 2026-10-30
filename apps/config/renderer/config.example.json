@@ -1,4 +1,5 @@
 {
+  "_comment": "DEV example only - NOT a production seed. The wifi-iface key is the literal placeholder ${WIFI_PSK}, resolved from the environment by apps/config/scripts/dev/renderer_applier.uc. The production renderer (scripts/openwrt/renderer_applier.uc) does not resolve placeholders and refuses to apply a config whose wifi-iface key is still a placeholder (or is empty or too short), so a production device_config must carry a real value. Never commit a real key here.",
   "device_config": {
     "fry": [
       {
@@ -90,7 +91,7 @@
         "ssid": "Fry Operator",
         "encryption": "psk2",
         "disabled": false,
-        "key": "988Dh283zX",
+        "key": "${WIFI_PSK}",
         "isolate": false
       },
       {
@@ -103,7 +104,7 @@
         "ssid": "Fry Operator",
         "encryption": "psk2",
         "disabled": false,
-        "key": "988Dh283zX",
+        "key": "${WIFI_PSK}",
         "isolate": false
       },
       {

@@ -7,6 +7,46 @@ function boolToUci(value) {
     return type(value) == 'bool' ? (value ? '1' : '0') : "" + value;
 }
 
+// Guard for the WPA2 passphrase. This renderer has NO environment resolver, so
+// a wifi-iface "key" must already be a real passphrase. An unresolved
+// "${NAME}" placeholder is a configuration error (it would otherwise be
+// applied as a publicly known passphrase), and an empty, whitespace-only or
+// too-short value would produce an OPEN network. Both are refused loudly
+// before anything is written to UCI.
+// Returns null when usable, else an error text.
+function pskProblem(psk) {
+    if (type(psk) != 'string') return 'must be a string';
+    let n = length(psk);
+    if (n >= 4 && substr(psk, 0, 2) == '${' && substr(psk, n - 1, 1) == '}')
+        return 'is an unresolved environment placeholder; the production renderer does not resolve placeholders';
+    if (n == 0) return 'is empty and would create an OPEN network';
+    let blank = true;
+    for (let i = 0; i < n; i++) {
+        let c = ord(psk, i);
+        if (c != 0x20 && c != 0x09 && c != 0x0a && c != 0x0d) { blank = false; break; }
+    }
+    if (blank) return 'is whitespace-only and would create an OPEN network';
+    if (n < 8) return 'is shorter than the WPA2 minimum of 8 characters and would create an OPEN network';
+    return null;
+}
+
+// Validate every PSK field in the config, so a failure aborts before any
+// section is written to the UCI cursor.
+function validatePsks(config) {
+    let wireless = config.device_config?.wireless;
+    if (type(wireless) != 'array') return null;
+    for (let section in wireless) {
+        if (type(section) != 'object' || section.meta_type != 'wifi-iface') continue;
+        for (let k in section) {
+            if (k != 'key') continue;
+            let problem = pskProblem(section[k]);
+            if (problem != null)
+                return sprintf('wireless.%s.key %s', section.meta_section || '?', problem);
+        }
+    }
+    return null;
+}
+
 // Clear all options in a section
 function clearAllSectionOptions(ctx, packageName, sectionName) {
     printf("Clearing all options in %s.%s\n", packageName, sectionName);
@@ -228,6 +268,14 @@ function main() {
 
     let config = readConfig(configFile);
     if (!config) return 1;
+
+    // Refuse an unusable passphrase before touching UCI: never apply a
+    // placeholder literal or an empty key.
+    let pskIssue = validatePsks(config);
+    if (pskIssue != null) {
+        warn(sprintf("Error: refusing to apply configuration: %s\n", pskIssue));
+        return 1;
+    }
 
     let ctx;
     try {
